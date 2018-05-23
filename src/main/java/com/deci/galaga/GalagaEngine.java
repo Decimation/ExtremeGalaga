@@ -5,17 +5,16 @@ import processing.core.PApplet;
 
 public class GalagaEngine extends PApplet {
 
-	private static final int FPS = 60;
-	private static final int WIDTH = 800;
+	private static final int FPS    = 60;
+	private static final int WIDTH  = 800;
 	private static final int HEIGHT = 800;
-
-	private GObject ship, tmp;
-
 	static PApplet instance;
 
 	static {
 
 	}
+
+	private GObject ship, tmp;
 
 	@Override
 	public void setup() {
@@ -38,8 +37,7 @@ public class GalagaEngine extends PApplet {
 	public void keyPressed() {
 		if (instance.key == 'a') {
 			ship.move(MovementTypes.LEFT);
-		}
-		else if (instance.key == 'd') {
+		} else if (instance.key == 'd') {
 			ship.move(MovementTypes.RIGHT);
 		}
 	}

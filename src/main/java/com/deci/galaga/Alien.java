@@ -2,7 +2,7 @@ package com.deci.galaga;
 
 class Alien extends GObject {
 	private static final String IMG_URL = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/enemy1.png";
-	
+
 	Alien() {
 		super(IMG_URL);
 		super.setY(100);
@@ -16,6 +16,6 @@ class Alien extends GObject {
 
 	@Override
 	void move(MovementTypes mt) {
-		
+
 	}
 }

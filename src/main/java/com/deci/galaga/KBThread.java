@@ -10,8 +10,7 @@ public class KBThread extends Thread implements Runnable {
 	void toggleKey(char c) {
 		if (keyMap.containsKey(c)) {
 			keyMap.put(c, !keyMap.get(c));
-		}
-		else {
+		} else {
 			keyMap.put(c, true);
 		}
 	}

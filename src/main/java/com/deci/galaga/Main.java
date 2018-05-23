@@ -6,10 +6,9 @@ import processing.core.PApplet;
 public class Main {
 
 
-
 	private static GalagaEngine engine;
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		System.setSecurityManager(null);
 
 		// Start the engine
@@ -19,6 +18,6 @@ public class Main {
 		PApplet.main("com.deci.galaga.GalagaEngine");
 
 
-    }
+	}
 
 }

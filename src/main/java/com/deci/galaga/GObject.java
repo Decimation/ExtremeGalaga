@@ -1,6 +1,5 @@
 package com.deci.galaga;
 
-import com.deci.galaga.GalagaEngine;
 import processing.core.PImage;
 
 /**
@@ -10,10 +9,8 @@ import processing.core.PImage;
  */
 abstract class GObject {
 
-	private PImage gameImg;
-	private volatile float    x, y;
-
-
+	private          PImage gameImg;
+	private volatile float  x, y;
 
 	GObject(final String imgUrl) {
 		this();
@@ -30,11 +27,9 @@ abstract class GObject {
 		System.out.println("[debug] GObject initialized");
 	}
 
-
 	abstract void draw();
+
 	abstract void move(MovementTypes mt);
-
-
 
 	PImage getGameImg() {
 		return gameImg;

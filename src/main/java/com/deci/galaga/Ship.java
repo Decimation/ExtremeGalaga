@@ -3,12 +3,12 @@ package com.deci.galaga;
 
 final class Ship extends GObject {
 
-	private static final String IMG_URL = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/galaga.png";
-	private static final float LERP_DELTA = 0.1f;
+	private static final String IMG_URL    = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/galaga.png";
+	private static final float  LERP_DELTA = 0.1f;
 	/**
 	 * How many x pixels to move by when changing coordinates
 	 */
-	private float xDelta;
+	private              float  xDelta;
 
 	Ship() {
 		super(IMG_URL);
