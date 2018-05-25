@@ -9,8 +9,5 @@
         <module name="ExtremeGalaga" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ExtremeGalaga" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

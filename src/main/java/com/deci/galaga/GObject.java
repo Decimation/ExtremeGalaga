@@ -48,4 +48,8 @@ abstract class GObject {
 			move(MovementTypes.RIGHT);
 		}
 	}
+
+	final Point getPoint() {
+		return new Point(x, y);
+	}
 }

@@ -17,6 +17,8 @@ public class GalagaEngine extends PApplet {
 
 	private static final List<GObject> aliens = new ArrayList<>();
 
+	private static final List<EBullet> bulletCache = new ArrayList<>();
+
 	private static GObject ship;
 
 	@Override
@@ -39,8 +41,7 @@ public class GalagaEngine extends PApplet {
 	 */
 	static Pair<Boolean, GObject> alienAtPoint(final Point p) {
 		for (final GObject g : aliens) {
-			Point tmp = new Point(g.getX(), g.getY());
-			if (tmp.equals(p)) return new Pair<>(true, g);
+			if (g.getPoint().equals(p)) return new Pair<>(true, g);
 		}
 		return new Pair<>(false, null);
 	}
@@ -50,10 +51,28 @@ public class GalagaEngine extends PApplet {
 		background(0);
 
 		if (keyPressed) {
-			new Thread(() -> ship.move(instance.key)).start();
+			if (instance.key == ' ') {
+				bulletCache.add(new EBullet(ship.getPoint()));
+			}
+			else new Thread(() -> ship.move(instance.key)).start();
 		}
 
+
 		ship.draw();
+
+		for (EBullet e : bulletCache) {
+			final Thread bullet = new Thread(e::fire);
+			bullet.start();
+			try {
+				bullet.join();
+			} catch (Exception x) {}
+			new Thread(() -> {
+				while (!alienAtPoint(e.getOrigin()).getKey()) {
+					e.draw();
+				}
+			}).start();
+
+		}
 		for (GObject g : aliens) {
 			g.draw();
 		}
