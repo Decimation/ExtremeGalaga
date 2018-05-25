@@ -7,9 +7,18 @@ package com.deci.galaga;
  */
 class EBullet {
 
-	private float speedScalar;
+	private float speed;
+	private float damage;
+	private Point origin;
+	private Point destination;
+	private static final String imgUrl = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/bullet.png";
 
 	void fire() {
-		// test
+
+		while (!(GalagaEngine.alienAtPoint(origin).getKey())) {
+
+		}
 	}
+
+
 }
