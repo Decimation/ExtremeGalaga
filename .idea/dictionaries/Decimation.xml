@@ -2,6 +2,7 @@
   <dictionary name="Decimation">
     <words>
       <w>galaga</w>
+      <w>lerp</w>
     </words>
   </dictionary>
 </component>

@@ -1,5 +1,8 @@
 package com.deci.galaga;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import processing.core.PImage;
 
 /**
@@ -9,8 +12,16 @@ import processing.core.PImage;
  */
 abstract class GObject {
 
-	private          PImage gameImg;
-	private volatile float  x, y;
+	@Getter(AccessLevel.PACKAGE)
+	private PImage gameImg;
+
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private volatile float x, y;
+
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private float health;
 
 	GObject(final String imgUrl) {
 		this();
@@ -20,7 +31,6 @@ abstract class GObject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	GObject() {
@@ -31,25 +41,11 @@ abstract class GObject {
 
 	abstract void move(MovementTypes mt);
 
-	PImage getGameImg() {
-		return gameImg;
-	}
-
-	final float getY() {
-		return y;
-	}
-
-	void setY(float y) {
-		this.y = y;
-	}
-
-	final float getX() {
-		return x;
-	}
-
-	void setX(float x) {
-		//this.x = JGalagaEngine.lerp(this.x,x,LERP_DELTA);
-
-		this.x = x;
+	final void move(char k) {
+		if (k == 'a') {
+			move(MovementTypes.LEFT);
+		} else if (k == 'd') {
+			move(MovementTypes.RIGHT);
+		}
 	}
 }
