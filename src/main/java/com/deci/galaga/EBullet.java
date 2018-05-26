@@ -1,7 +1,6 @@
 package com.deci.galaga;
 
-import lombok.Getter;
-import processing.core.PImage;
+import com.jcabi.aspects.Async;
 
 /**
  * Bullet entity
@@ -10,37 +9,24 @@ import processing.core.PImage;
  */
 class EBullet extends GObject {
 
-	private float speed;
-	private float damage;
-
-	@Getter
-	private Point origin;
-	private Point destination;
-	private static final String imgUrl = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/bullet.png";
-	private static PImage gameImg;
+	private static final String imgUrl          = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/bullet.png";
+	private static final int    X_ORIGIN_OFFSET = 14;
+	private              float  speed;
+	private              float  damage;
+	private              Point  destination;
 
 	EBullet(Point origin) {
-		this.origin = origin;
-		try {
-			gameImg = GalagaEngine.instance.loadImage(imgUrl, "png");
-			System.out.println("[debug] Game asset loaded");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		super(imgUrl);
+		setX(origin.getX());
+		setY(origin.getY());
+		//System.out.printf("EBullet %s origin @ %s\n", getID().toString(), origin.toString());
 	}
 
-	void fire() {
 
-		while (!(GalagaEngine.alienAtPoint(origin).getKey())) {
-			origin.setY(GalagaEngine.lerp(origin.getY(), 0, -0.1f));
-
-		}
-	}
-
+	@Async
 	@Override
 	void draw() {
-		GalagaEngine.instance.image(gameImg, origin.getX(), origin.getY());
+		GalagaEngine.instance.image(getGameImg(), this.getX() + X_ORIGIN_OFFSET, this.getY());
 	}
 
 	@Override

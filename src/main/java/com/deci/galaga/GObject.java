@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import processing.core.PImage;
 
+import java.util.UUID;
+
 /**
  * Abstract game object
  *
@@ -23,18 +25,26 @@ abstract class GObject {
 	@Setter(AccessLevel.PACKAGE)
 	private float health;
 
+	@Getter(AccessLevel.PACKAGE)
+	private UUID ID;
+
 	GObject(final String imgUrl) {
 		this();
+
 		try {
 			gameImg = GalagaEngine.instance.loadImage(imgUrl, "png");
-			System.out.println("[debug] Game asset loaded");
+			gameImg.format = GalagaEngine.ARGB;
+			//System.out.println("[debug] Game asset loaded");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		alphatize();
+
 	}
 
 	GObject() {
-		System.out.println("[debug] GObject initialized");
+		ID = UUID.randomUUID();
+		//System.out.printf("[debug] GObject initialized with UUID %s\n", ID.toString());
 	}
 
 	abstract void draw();
@@ -49,7 +59,33 @@ abstract class GObject {
 		}
 	}
 
+	/**
+	 * Convert black pixels into transparent black pixels.
+	 */
+	private void alphatize() {
+		for (int i = 0; i < gameImg.pixels.length; i++) {
+			if (gameImg.pixels[i] == GalagaEngine.instance.color(0, 0, 0)) {
+				gameImg.pixels[i] = GalagaEngine.instance.color(0, 0, 0, 0);
+			}
+		}
+		gameImg.updatePixels();
+	}
+
 	final Point getPoint() {
 		return new Point(x, y);
 	}
+
+	final int height() {
+		return gameImg.height;
+	}
+
+	final int width() {
+		return gameImg.width;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("ID: %s @ %s with %f HP", ID.toString(), new Point(x, y), health);
+	}
+
 }
