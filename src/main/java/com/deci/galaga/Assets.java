@@ -1,14 +1,17 @@
 package com.deci.galaga;
 
-import java.awt.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 class Assets {
-	private Assets() {}
-
 	private static final Map<String, Resource> resources = new HashMap<>();
+
+	private static final String GITHUB_ASSETS_ROOT = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/";
+	static final String GITHUB_ASSETS_IMAGES = GITHUB_ASSETS_ROOT + "images/";
+	static final String GITHUB_ASSETS_SOUNDS = GITHUB_ASSETS_ROOT + "sounds/";
+
+	private Assets() {
+	}
 
 	static AudioResource getSound(String fileName) {
 		return (AudioResource) resources.get(fileName);

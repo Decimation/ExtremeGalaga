@@ -2,19 +2,10 @@ package com.deci.galaga;
 
 
 import javafx.util.Pair;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.SneakyThrows;
 import processing.core.PApplet;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 public class GalagaEngine extends PApplet {
 
@@ -22,10 +13,11 @@ public class GalagaEngine extends PApplet {
 	private static final int           FPS        = 60;
 	private static final int           WIDTH      = 800;
 	private static final int           HEIGHT     = 800;
-	private static final List<GObject> aliens     = new ArrayList<>();
+
+	static final List<GObject> aliens     = new ArrayList<>();
 
 	static PApplet instance;
-	@Getter(AccessLevel.PACKAGE)
+
 	static GObject ship;
 
 	static boolean canShoot;
@@ -66,11 +58,13 @@ public class GalagaEngine extends PApplet {
 	public void setup() {
 		instance = this;
 
-		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "galaga.png"));
-		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "bullet.png"));
-		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "enemy1.png"));
+		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga_bullet.png"));
+		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga.png"));
+		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "enemy1.png"));
 		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
 		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
+		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav"));
+		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "pewpew.wav"));
 
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);
@@ -82,6 +76,8 @@ public class GalagaEngine extends PApplet {
 
 
 	}
+
+
 
 	@Override
 	public void keyTyped() {
@@ -100,10 +96,13 @@ public class GalagaEngine extends PApplet {
 
 		ship.update();
 		ship.manifest();
+		Hitbox.apply(ship);
 
 		for (int i = Common.cast(ship, Ship.class).bulletCache.size() - 1; i >= 0; i--) {
-			EBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
+			GBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
 			bullet.update();
+
+			//bullet.getSound().play();
 		}
 
 		if (keyPressed) {
@@ -112,6 +111,7 @@ public class GalagaEngine extends PApplet {
 
 		for (final GObject g : aliens) {
 			g.manifest();
+			Hitbox.apply(g);
 		}
 
 	}

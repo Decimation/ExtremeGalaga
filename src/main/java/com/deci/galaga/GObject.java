@@ -16,16 +16,13 @@ abstract class GObject {
 
 
 	@Getter(AccessLevel.PACKAGE)
+	private final    UUID  ID;
+	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private volatile float x, y;
-
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
-	private float health;
-
-	@Getter(AccessLevel.PACKAGE)
-	private final UUID ID;
-
+	private float    health;
 	private Resource image;
 	private Resource sound;
 
@@ -33,6 +30,10 @@ abstract class GObject {
 		this();
 		img.alphatize();
 		this.image = img;
+	}
+
+	private GObject() {
+		ID = UUID.randomUUID();
 	}
 
 	final PImage getGameImage() {
@@ -45,10 +46,6 @@ abstract class GObject {
 
 	final void setSound(AudioResource sound) {
 		this.sound = sound;
-	}
-
-	private GObject() {
-		ID = UUID.randomUUID();
 	}
 
 	abstract void update();
@@ -72,7 +69,6 @@ abstract class GObject {
 			move(MovementTypes.RIGHT);
 		}
 	}
-
 
 
 	final Point getPoint() {

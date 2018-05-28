@@ -2,10 +2,11 @@ package com.deci.galaga;
 
 class Common {
 
-	private Common() {}
+	private Common() {
+	}
 
 	static void printf(String s, Object... fmt) {
-		System.out.printf("[debug] %s\n", String.format(s,fmt));
+		System.out.printf("[debug] %s\n", String.format(s, fmt));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -30,7 +31,7 @@ class Common {
 	static int getCurrentlyExecutingThreads() {
 		int nbRunning = 0;
 		for (Thread t : Thread.getAllStackTraces().keySet()) {
-			if (t.getState()==Thread.State.RUNNABLE) nbRunning++;
+			if (t.getState() == Thread.State.RUNNABLE) nbRunning++;
 		}
 		return nbRunning;
 	}

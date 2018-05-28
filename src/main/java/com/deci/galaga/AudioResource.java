@@ -1,26 +1,20 @@
 package com.deci.galaga;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 class AudioResource extends Resource {
 
 
-	private int     plays;
+	private int plays;
 
 	AudioResource(String path, String fileName) {
 		super(path, fileName);
 
 	}
 
-
-	synchronized void play() {
-
-
+	synchronized void play(float db) {
 		new Thread(() -> {
 			CountDownLatch syncLatch = new CountDownLatch(1);
 
@@ -29,6 +23,13 @@ class AudioResource extends Resource {
 						new File(this.getFullPath()));
 
 				Clip clip = AudioSystem.getClip();
+				clip.open(stream);
+
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+				//float range = gainControl.getMaximum() - gainControl.getMinimum();
+				//float gain = (range * db) + gainControl.getMinimum();
+				gainControl.setValue(db);
 
 				// Listener which allow method return once sound is completed
 				clip.addLineListener(e -> {
@@ -37,7 +38,6 @@ class AudioResource extends Resource {
 					}
 				});
 
-				clip.open(stream);
 				clip.start();
 
 
@@ -47,7 +47,9 @@ class AudioResource extends Resource {
 			}
 			plays++;
 		}).start();
+	}
 
-
+	synchronized void play() {
+		play(-15f);
 	}
 }

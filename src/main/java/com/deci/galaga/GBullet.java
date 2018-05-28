@@ -1,20 +1,20 @@
 package com.deci.galaga;
 
 /**
- * Bullet entity
+ * Bullet entity for Galaga ship
  *
  * @author 795835
  */
-class EBullet extends GObject {
+class GBullet extends GObject {
 
-	private static final int    X_ORIGIN_OFFSET = 14;
-	private              float  speed;
-	private              float  damage;
-	private              float  rotation;
-	private              Point  oldPoint;
+	private static final int   X_ORIGIN_OFFSET = 14;
+	private              float speed;
+	private              float damage;
+	private              float rotation;
+	private              Point oldPoint;
 
-	EBullet(final Point origin) {
-		super(Assets.getImage("bullet.png"));
+	GBullet(final Point origin) {
+		super(Assets.getImage("galaga_bullet.png"));
 		setX(origin.getX());
 		setY(origin.getY());
 		oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
@@ -23,11 +23,22 @@ class EBullet extends GObject {
 		super.setSound(Assets.getSound("fire1.wav"));
 	}
 
+	private void checkHit() {
+		for (GObject alien : GalagaEngine.aliens) {
+			if (Hitbox.collision(alien, this)) {
+				this.destroy();
+				Hitbox.drawIntersection(alien, this);
+			}
+		}
+	}
+
 	@Override
 	void manifest() {
-		GalagaEngine.instance.image(this.getGameImage(), this.getX() + X_ORIGIN_OFFSET, this.getY());
-
-
+		this.setX(this.getX() + X_ORIGIN_OFFSET);
+		GalagaEngine.instance.image(this.getGameImage(), this.getX(), this.getY());
+		checkHit();
+		Hitbox.apply(this);
+		this.setX(this.getX() - X_ORIGIN_OFFSET);
 	}
 
 	@Override
@@ -52,7 +63,8 @@ class EBullet extends GObject {
 
 	@Override
 	void destroy() {
-
+		Common.printf("Intersection detected @ %s", this.getPoint());
+		Assets.getSound("energy_disintegrate4.wav").play();
 	}
 
 	@Override

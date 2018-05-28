@@ -5,8 +5,9 @@ class DrawThread extends Thread {
 	float frameRate;
 	int   frameCount;
 	float frameRateLastNanos;
-	private volatile EBullet obj;
-	DrawThread(final EBullet obj) {
+	private volatile GBullet obj;
+
+	DrawThread(final GBullet obj) {
 		this.obj = obj;
 		System.out.printf("\nDrawThread @ %s\n", obj);
 

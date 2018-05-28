@@ -6,14 +6,12 @@ import java.util.List;
 
 final class Ship extends GObject {
 
-	private static final float  LERP_DELTA = 0.1f;
-
+	private static final float LERP_DELTA = 0.1f;
+	List<GBullet> bulletCache;
 	/**
 	 * How many x pixels to move by when changing coordinates
 	 */
 	private float xDelta;
-
-	List<EBullet> bulletCache;
 
 	Ship() {
 		super(Assets.getImage("galaga.png"));
@@ -28,11 +26,10 @@ final class Ship extends GObject {
 	@Override
 	void update() {
 		if (GalagaEngine.instance.mousePressed && GalagaEngine.canShoot) {
-			bulletCache.add(new EBullet(getPoint()));
+			bulletCache.add(new GBullet(getPoint()));
 			GalagaEngine.canShoot = false;
 			GalagaEngine.canShootCounter = 0;
-		}
-		else {
+		} else {
 			GalagaEngine.canShootCounter++;
 			if (GalagaEngine.canShootCounter == GalagaEngine.shootingFrequency) {
 				GalagaEngine.canShoot = true;
