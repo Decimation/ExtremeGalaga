@@ -2,10 +2,19 @@ package com.deci.galaga;
 
 
 import javafx.util.Pair;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.SneakyThrows;
 import processing.core.PApplet;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class GalagaEngine extends PApplet {
 
@@ -14,8 +23,18 @@ public class GalagaEngine extends PApplet {
 	private static final int           WIDTH      = 800;
 	private static final int           HEIGHT     = 800;
 	private static final List<GObject> aliens     = new ArrayList<>();
-	static               PApplet       instance;
-	private static       GObject       ship;
+
+	static PApplet instance;
+	@Getter(AccessLevel.PACKAGE)
+	static GObject ship;
+
+	static boolean canShoot;
+	static int     canShootCounter;
+	static int     shootingFrequency = 3;
+
+	static {
+
+	}
 
 	/**
 	 * Determines if an alien exists at Point p
@@ -37,56 +56,63 @@ public class GalagaEngine extends PApplet {
 		return new Pair<>(false, null);
 	}
 
-	private static void thread(final Runnable target) {
-		new Thread(target).start();
+	@Override
+	public void settings() {
+		size(WIDTH, HEIGHT);
+
 	}
 
 	@Override
 	public void setup() {
 		instance = this;
 
+		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "galaga.png"));
+		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "bullet.png"));
+		Assets.add(new ImageResource("https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/", "enemy1.png"));
+		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
+		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
+
 		ship = new Ship();
-		frame.setTitle(GAME_TITLE);
+		surface.setTitle(GAME_TITLE);
 		smooth();
 		frameRate(FPS);
-		size(WIDTH, HEIGHT);
+
 
 		aliens.add(new Alien()); //tmp
-		System.out.printf("%s\n", aliens.get(0));
-	}
 
-	private void drawBullet() {
-		final EBullet e = new EBullet(ship.getPoint());
-		float newY = e.getY();
 
-		while (newY >= 0.0f) {
-			newY -= 0.1f;
-			e.setY(newY);
-			thread(() -> image(e.getGameImg(), e.getX() + 14, e.getY()));
-		}
 	}
 
 	@Override
 	public void keyTyped() {
-		if (key == ' ') {
-			thread(this::drawBullet);
+		switch (key) {
+			case ' ':
+				//todo
+				//((Ship) ship).fire();
+				break;
 		}
 	}
+
 
 	@Override
 	public void draw() {
 		background(0);
 
+		ship.update();
+		ship.manifest();
+
+		for (int i = Common.cast(ship, Ship.class).bulletCache.size() - 1; i >= 0; i--) {
+			EBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
+			bullet.update();
+		}
 
 		if (keyPressed) {
-			thread(() -> ship.move(key));
+			Common.autoThread(() -> ship.handleKey(key));
 		}
-
-		image(ship.getGameImg(), ship.getX(), ship.getY());
-
 
 		for (final GObject g : aliens) {
-			g.draw();
+			g.manifest();
 		}
+
 	}
 }

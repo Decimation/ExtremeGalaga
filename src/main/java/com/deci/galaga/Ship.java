@@ -1,9 +1,11 @@
 package com.deci.galaga;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 final class Ship extends GObject {
 
-	private static final String IMG_URL    = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/galaga.png";
 	private static final float  LERP_DELTA = 0.1f;
 
 	/**
@@ -11,17 +13,36 @@ final class Ship extends GObject {
 	 */
 	private float xDelta;
 
+	List<EBullet> bulletCache;
+
 	Ship() {
-		super(IMG_URL);
-		setX(0);
-		setY(500);
+		super(Assets.getImage("galaga.png"));
+		setX(0f);
+		setY(500f);
 		setHealth(100f);
-		xDelta = 25;
+		xDelta = 25f;
+		bulletCache = new ArrayList<>();
+	}
+
+
+	@Override
+	void update() {
+		if (GalagaEngine.instance.mousePressed && GalagaEngine.canShoot) {
+			bulletCache.add(new EBullet(getPoint()));
+			GalagaEngine.canShoot = false;
+			GalagaEngine.canShootCounter = 0;
+		}
+		else {
+			GalagaEngine.canShootCounter++;
+			if (GalagaEngine.canShootCounter == GalagaEngine.shootingFrequency) {
+				GalagaEngine.canShoot = true;
+			}
+		}
 	}
 
 	@Override
-	void draw() {
-		GalagaEngine.instance.image(this.getGameImg(), this.getX(), this.getY());
+	void manifest() {
+		super.manifestInternal(this);
 	}
 
 	@Override
@@ -39,8 +60,16 @@ final class Ship extends GObject {
 	}
 
 
-	void shoot() {
-
+	@Override
+	void handleKey(final char c) {
+		switch (c) {
+			default:
+				move(c);
+		}
 	}
 
+	@Override
+	void destroy() {
+
+	}
 }

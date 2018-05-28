@@ -1,7 +1,5 @@
 package com.deci.galaga;
 
-import com.jcabi.aspects.Async;
-
 /**
  * Bullet entity
  *
@@ -9,28 +7,56 @@ import com.jcabi.aspects.Async;
  */
 class EBullet extends GObject {
 
-	private static final String imgUrl          = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/bullet.png";
 	private static final int    X_ORIGIN_OFFSET = 14;
 	private              float  speed;
 	private              float  damage;
-	private              Point  destination;
+	private              float  rotation;
+	private              Point  oldPoint;
 
-	EBullet(Point origin) {
-		super(imgUrl);
+	EBullet(final Point origin) {
+		super(Assets.getImage("bullet.png"));
 		setX(origin.getX());
 		setY(origin.getY());
-		//System.out.printf("EBullet %s origin @ %s\n", getID().toString(), origin.toString());
+		oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
+		rotation = GalagaEngine.atan2(oldPoint.getY() - getY(), oldPoint.getX() - getX()) / GalagaEngine.PI * 180;
+		speed = 10;
+		super.setSound(Assets.getSound("fire1.wav"));
 	}
 
-
-	@Async
 	@Override
-	void draw() {
-		GalagaEngine.instance.image(getGameImg(), this.getX() + X_ORIGIN_OFFSET, this.getY());
+	void manifest() {
+		GalagaEngine.instance.image(this.getGameImage(), this.getX() + X_ORIGIN_OFFSET, this.getY());
+
+
+	}
+
+	@Override
+	void update() {
+		setX(getX() + GalagaEngine.cos(rotation / 180 * GalagaEngine.PI) * speed);
+		setY(getY() + GalagaEngine.sin(rotation / 180 * GalagaEngine.PI) * speed);
+		this.manifest();
+		if (getX() == 0) {
+			Common.cast(GalagaEngine.ship, Ship.class).bulletCache.remove(this);
+		}
 	}
 
 	@Override
 	void move(MovementTypes mt) {
 
+	}
+
+	@Override
+	void handleKey(final char c) {
+
+	}
+
+	@Override
+	void destroy() {
+
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
 	}
 }

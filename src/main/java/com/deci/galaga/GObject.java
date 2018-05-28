@@ -14,8 +14,6 @@ import java.util.UUID;
  */
 abstract class GObject {
 
-	@Getter(AccessLevel.PACKAGE)
-	private PImage gameImg;
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -26,30 +24,46 @@ abstract class GObject {
 	private float health;
 
 	@Getter(AccessLevel.PACKAGE)
-	private UUID ID;
+	private final UUID ID;
 
-	GObject(final String imgUrl) {
+	private Resource image;
+	private Resource sound;
+
+	GObject(final ImageResource img) {
 		this();
-
-		try {
-			gameImg = GalagaEngine.instance.loadImage(imgUrl, "png");
-			gameImg.format = GalagaEngine.ARGB;
-			//System.out.println("[debug] Game asset loaded");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		alphatize();
-
+		img.alphatize();
+		this.image = img;
 	}
 
-	GObject() {
+	final PImage getGameImage() {
+		return ((ImageResource) image).getImage();
+	}
+
+	final AudioResource getSound() {
+		return (AudioResource) sound;
+	}
+
+	final void setSound(AudioResource sound) {
+		this.sound = sound;
+	}
+
+	private GObject() {
 		ID = UUID.randomUUID();
-		//System.out.printf("[debug] GObject initialized with UUID %s\n", ID.toString());
 	}
 
-	abstract void draw();
+	abstract void update();
 
-	abstract void move(MovementTypes mt);
+	abstract void manifest();
+
+	abstract void move(final MovementTypes mt);
+
+	abstract void destroy();
+
+	abstract void handleKey(final char c);
+
+	final void manifestInternal(final GObject g) {
+		GalagaEngine.instance.image(g.getGameImage(), g.getX(), g.getY());
+	}
 
 	final void move(char k) {
 		if (k == 'a') {
@@ -59,28 +73,10 @@ abstract class GObject {
 		}
 	}
 
-	/**
-	 * Convert black pixels into transparent black pixels.
-	 */
-	private void alphatize() {
-		for (int i = 0; i < gameImg.pixels.length; i++) {
-			if (gameImg.pixels[i] == GalagaEngine.instance.color(0, 0, 0)) {
-				gameImg.pixels[i] = GalagaEngine.instance.color(0, 0, 0, 0);
-			}
-		}
-		gameImg.updatePixels();
-	}
+
 
 	final Point getPoint() {
 		return new Point(x, y);
-	}
-
-	final int height() {
-		return gameImg.height;
-	}
-
-	final int width() {
-		return gameImg.width;
 	}
 
 	@Override
