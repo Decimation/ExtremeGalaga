@@ -28,6 +28,7 @@ class GBullet extends GObject {
 			if (Hitbox.collision(alien, this)) {
 				alien.destroy();
 				Hitbox.drawIntersection(alien, this);
+				this.destroy();
 			}
 		}
 	}
@@ -46,8 +47,9 @@ class GBullet extends GObject {
 		setX(getX() + GalagaEngine.cos(rotation / 180 * GalagaEngine.PI) * speed);
 		setY(getY() + GalagaEngine.sin(rotation / 180 * GalagaEngine.PI) * speed);
 		this.manifest();
-		if (getX() == 0) {
+		if (getY() <= 0f || getY() >= GalagaEngine.WIDTH) {
 			Common.cast(GalagaEngine.ship, Ship.class).bulletCache.remove(this);
+			this.destroy();
 		}
 	}
 
@@ -63,8 +65,7 @@ class GBullet extends GObject {
 
 	@Override
 	void destroy() {
-		Common.printf("Intersection detected @ %s", this.getPoint());
-
+		Common.printf("Destroying GBullet %s", this.toString());
 	}
 
 	@Override

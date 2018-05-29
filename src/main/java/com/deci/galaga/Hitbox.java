@@ -6,7 +6,22 @@ import java.awt.*;
 
 class Hitbox {
 
+	private static boolean enabled;
+
+	static {
+
+	}
+
+	static void enable() {
+		enabled = true;
+	}
+
+	static void disable() {
+		enabled = false;
+	}
+
 	static void apply(final GObject obj) {
+		if (!enabled) {return;}
 		GalagaEngine.instance.noFill();
 		GalagaEngine.instance.stroke(255, 0, 0);
 		GalagaEngine.instance.rect(obj.getX(), obj.getY(), obj.getGameImage().width, obj.getGameImage().height);
@@ -15,6 +30,9 @@ class Hitbox {
 
 	@SneakyThrows
 	static void drawIntersection(final GObject a, final GObject b) {
+		if (!enabled) {
+			return;
+		}
 		if (!collision(a, b)) {
 			// todo: make GalagaException class
 			throw new Exception("No intersection detected");

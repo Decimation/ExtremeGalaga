@@ -12,15 +12,17 @@ public class GalagaEngine extends PApplet {
 	static final List<GObject> aliens = new ArrayList<>();
 	private static final String GAME_TITLE = "Extreme Galaga";
 	private static final int    FPS        = 60;
-	private static final int    WIDTH      = 800;
-	private static final int    HEIGHT     = 800;
+	static final int    WIDTH      = 800;
+	static final int    HEIGHT     = 800;
 	static PApplet instance;
 
 	static GObject ship;
 
 	static boolean canShoot;
 	static int     canShootCounter;
-	static int     shootingFrequency = 3;
+	static int     shootingFrequency = 5;
+
+	private Thread gauge;
 
 	static {
 
@@ -49,7 +51,7 @@ public class GalagaEngine extends PApplet {
 	@Override
 	public void settings() {
 		size(WIDTH, HEIGHT);
-
+		Hitbox.disable();
 	}
 
 	@Override
@@ -59,13 +61,14 @@ public class GalagaEngine extends PApplet {
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga_bullet.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "enemy1.png"));
-		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
-		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
-		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav"));
-		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "pewpew.wav"));
+		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
+		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
+		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav", ResourceType.URL));
+		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "pewpew.wav", ResourceType.URL));
 
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);
+
 		smooth();
 		frameRate(FPS);
 
@@ -99,8 +102,8 @@ public class GalagaEngine extends PApplet {
 			GBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
 			bullet.update();
 
-			//bullet.getSound().animate();
 		}
+		instance.rect(0,700, Common.cast(ship, Ship.class).bulletCache.size(), 20);
 
 		if (keyPressed) {
 			Common.autoThread(() -> ship.handleKey(key));
