@@ -22,7 +22,9 @@ abstract class GObject {
 	private volatile float x, y;
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
-	private float    health;
+	private float health;
+
+
 	private Resource image;
 	private Resource sound;
 
@@ -34,6 +36,10 @@ abstract class GObject {
 
 	private GObject() {
 		ID = UUID.randomUUID();
+	}
+
+	final ImageResource getImageResource() {
+		return (ImageResource) image;
 	}
 
 	final PImage getGameImage() {

@@ -9,13 +9,11 @@ import java.util.List;
 
 public class GalagaEngine extends PApplet {
 
-	private static final String        GAME_TITLE = "Extreme Galaga";
-	private static final int           FPS        = 60;
-	private static final int           WIDTH      = 800;
-	private static final int           HEIGHT     = 800;
-
-	static final List<GObject> aliens     = new ArrayList<>();
-
+	static final List<GObject> aliens = new ArrayList<>();
+	private static final String GAME_TITLE = "Extreme Galaga";
+	private static final int    FPS        = 60;
+	private static final int    WIDTH      = 800;
+	private static final int    HEIGHT     = 800;
 	static PApplet instance;
 
 	static GObject ship;
@@ -78,7 +76,6 @@ public class GalagaEngine extends PApplet {
 	}
 
 
-
 	@Override
 	public void keyTyped() {
 		switch (key) {
@@ -102,7 +99,7 @@ public class GalagaEngine extends PApplet {
 			GBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
 			bullet.update();
 
-			//bullet.getSound().play();
+			//bullet.getSound().animate();
 		}
 
 		if (keyPressed) {
@@ -112,6 +109,9 @@ public class GalagaEngine extends PApplet {
 		for (final GObject g : aliens) {
 			g.manifest();
 			Hitbox.apply(g);
+			if (!((Alien) g).isAlive()) {
+				((Alien) g).explode();
+			}
 		}
 
 	}
