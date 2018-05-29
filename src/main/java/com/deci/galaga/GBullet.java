@@ -26,7 +26,7 @@ class GBullet extends GObject {
 	private void checkHit() {
 		for (GObject alien : GalagaEngine.aliens) {
 			if (Hitbox.collision(alien, this)) {
-				this.destroy();
+				alien.destroy();
 				Hitbox.drawIntersection(alien, this);
 			}
 		}
@@ -64,7 +64,7 @@ class GBullet extends GObject {
 	@Override
 	void destroy() {
 		Common.printf("Intersection detected @ %s", this.getPoint());
-		Assets.getSound("energy_disintegrate4.wav").play();
+
 	}
 
 	@Override

@@ -2,11 +2,18 @@ package com.deci.galaga;
 
 class Alien extends GObject {
 
+	private boolean isAlive;
+
 	Alien() {
 		super(Assets.getImage("enemy1.png"));
 		super.setY(100);
 		super.setX(10);
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
+		isAlive = false;
+	}
+
+	boolean isAlive() {
+		return isAlive;
 	}
 
 	@Override
@@ -16,7 +23,8 @@ class Alien extends GObject {
 
 	@Override
 	void manifest() {
-		super.manifestInternal(this);
+		if (!isAlive)
+			super.manifestInternal(this);
 	}
 
 	@Override
@@ -31,6 +39,10 @@ class Alien extends GObject {
 
 	@Override
 	void destroy() {
-		getSound().play();
+		if (!isAlive) {
+			getSound().play();
+			isAlive = true;
+		}
+
 	}
 }
