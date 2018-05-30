@@ -8,7 +8,7 @@ import java.util.concurrent.CountDownLatch;
 class AudioResource extends Resource {
 
 
-	private int plays;
+	private int              plays;
 	private AudioInputStream stream;
 
 	AudioResource(String path, String fileName) {
@@ -16,7 +16,8 @@ class AudioResource extends Resource {
 		try {
 			stream = AudioSystem.getAudioInputStream(
 					new File(this.getFullPath()));
-		} catch (Exception x) {}
+		} catch (Exception x) {
+		}
 	}
 
 	AudioResource(String path, String fileName, ResourceType type) {
@@ -26,14 +27,16 @@ class AudioResource extends Resource {
 				try {
 					stream = AudioSystem.getAudioInputStream(
 							new File(this.getFullPath()));
-				} catch (Exception x) {}
+				} catch (Exception x) {
+				}
 
 				break;
 			case URL:
 				try {
 					stream = AudioSystem.getAudioInputStream(
 							new URL(this.getFullPath()));
-				} catch (Exception x) {}
+				} catch (Exception x) {
+				}
 
 				break;
 		}

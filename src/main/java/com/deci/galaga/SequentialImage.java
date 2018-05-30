@@ -3,8 +3,8 @@ package com.deci.galaga;
 class SequentialImage {
 
 	private final Resource[] frames;
-	private int currentIndex;
-	private int callNumber;
+	private       int        currentIndex;
+	private       int        callNumber;
 
 	// No bounds checking as of now
 
@@ -25,14 +25,13 @@ class SequentialImage {
 	void advance(final Point p) {
 		if (currentIndex < frames.length) {
 			GalagaEngine.instance.image(((ImageResource) frames[currentIndex++]).getImage(), p.getX(), p.getY());
-			Common.printf("currentIndex: %d", currentIndex);
-			Common.printf("callNumber: %d", callNumber);
+			//Common.printf("currentIndex: %d", currentIndex);
+			//Common.printf("callNumber: %d", callNumber);
 		}
 	}
 
 	/**
-	 *
-	 * @param p Where to draw the animation
+	 * @param p            Where to draw the animation
 	 * @param advanceEvery How many calls to wait until moving the frame index
 	 */
 	void advanceEvery(final Point p, int advanceEvery) {

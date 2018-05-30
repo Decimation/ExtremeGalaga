@@ -8,9 +8,9 @@ package com.deci.galaga;
 class GBullet extends GObject {
 
 	private static final int   X_ORIGIN_OFFSET = 14;
-	private              float speed;
+	private              final float speed;
 	private              float damage;
-	private              float rotation;
+	private              final float rotation;
 	private              Point oldPoint;
 
 	GBullet(final Point origin) {
@@ -19,14 +19,15 @@ class GBullet extends GObject {
 		setY(origin.getY());
 		oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
 		rotation = GalagaEngine.atan2(oldPoint.getY() - getY(), oldPoint.getX() - getX()) / GalagaEngine.PI * 180;
-		speed = 10;
-		super.setSound(Assets.getSound("player-shoot.mp3"));
+		speed = 10f;
+		damage = 5f;
+		//super.setSound(Assets.getSound("player-shoot.mp3"));
 	}
 
 	private void checkHit() {
 		for (GObject alien : GalagaEngine.aliens) {
-			if (Hitbox.collision(alien, this)) {
-				alien.destroy();
+			if (alien.isAlive() && Hitbox.collision(alien, this)) {
+				alien.damage(damage);
 				Hitbox.drawIntersection(alien, this);
 				this.destroy();
 			}
@@ -47,16 +48,11 @@ class GBullet extends GObject {
 		setX(getX() + GalagaEngine.cos(rotation / 180 * GalagaEngine.PI) * speed);
 		setY(getY() + GalagaEngine.sin(rotation / 180 * GalagaEngine.PI) * speed);
 		this.manifest();
-		getSound().play();
+
 		if (getY() <= 0f || getY() >= GalagaEngine.WIDTH) {
 			Common.cast(GalagaEngine.ship, Ship.class).bulletCache.remove(this);
 			this.destroy();
 		}
-	}
-
-	@Override
-	void move(MovementTypes mt) {
-
 	}
 
 	@Override
@@ -67,6 +63,7 @@ class GBullet extends GObject {
 	@Override
 	void destroy() {
 		Common.printf("Destroying GBullet [%s]", this.toString());
+		super.destroy();
 	}
 
 	@Override

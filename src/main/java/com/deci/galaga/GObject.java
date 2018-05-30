@@ -25,6 +25,9 @@ abstract class GObject {
 	private float health;
 
 
+	@Getter(AccessLevel.PACKAGE)
+	private boolean isAlive;
+
 	private Resource image;
 	private Resource sound;
 
@@ -32,6 +35,15 @@ abstract class GObject {
 		this();
 		img.alphatize();
 		this.image = img;
+		this.isAlive = true;
+	}
+
+	final void damage(float dmg) {
+		setHealth(getHealth() - dmg);
+		if (health <= 0) {
+			destroy();
+		}
+		Common.printf("%s", this.toString());
 	}
 
 	private GObject() {
@@ -58,22 +70,14 @@ abstract class GObject {
 
 	abstract void manifest();
 
-	abstract void move(final MovementTypes mt);
-
-	abstract void destroy();
+	void destroy() {
+		isAlive = false;
+	}
 
 	abstract void handleKey(final char c);
 
 	final void manifestInternal(final GObject g) {
 		GalagaEngine.instance.image(g.getGameImage(), g.getX(), g.getY());
-	}
-
-	final void move(char k) {
-		if (k == 'a') {
-			move(MovementTypes.LEFT);
-		} else if (k == 'd') {
-			move(MovementTypes.RIGHT);
-		}
 	}
 
 

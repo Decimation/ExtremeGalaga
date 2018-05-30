@@ -21,7 +21,9 @@ class Hitbox {
 	}
 
 	static void apply(final GObject obj) {
-		if (!enabled) {return;}
+		if (!enabled) {
+			return;
+		}
 		GalagaEngine.instance.noFill();
 		GalagaEngine.instance.stroke(255, 0, 0);
 		GalagaEngine.instance.rect(obj.getX(), obj.getY(), obj.getGameImage().width, obj.getGameImage().height);
@@ -39,6 +41,7 @@ class Hitbox {
 		}
 		Rectangle intersection = new Rectangle((int) a.getX(), (int) a.getY(), a.getGameImage().width, a.getGameImage().height);
 		intersection = intersection.intersection(new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height));
+
 		GalagaEngine.instance.stroke(0, 255, 0);
 		GalagaEngine.instance.line(intersection.x, intersection.y, 800, 800);
 		GalagaEngine.instance.line(intersection.x, intersection.y, 800, intersection.y);
@@ -46,6 +49,11 @@ class Hitbox {
 
 	static boolean collision(final GObject a, final GObject b) {
 		Rectangle ar = new Rectangle((int) a.getX(), (int) a.getY(), a.getGameImage().width, a.getGameImage().height);
-		return ar.intersects(new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height));
+		Rectangle br = new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height);
+		if (ar.intersects(br)) {
+			Common.printf("Intersection detected @ (%d, %d)", ar.intersection(br).x, ar.intersection(br).y);
+			return true;
+		}
+		return false;
 	}
 }

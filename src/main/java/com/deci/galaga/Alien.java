@@ -2,7 +2,6 @@ package com.deci.galaga;
 
 class Alien extends GObject {
 
-	private boolean isAlive;
 	private SequentialImage si;
 
 	Alien() {
@@ -10,13 +9,10 @@ class Alien extends GObject {
 		super.setY(100);
 		super.setX(10);
 		super.setSound(Assets.getSound("enemy1death.wav"));
-		isAlive = true;
+		super.setHealth(10f);
 		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
 	}
 
-	boolean isAlive() {
-		return isAlive;
-	}
 
 	@Override
 	void update() {
@@ -25,13 +21,8 @@ class Alien extends GObject {
 
 	@Override
 	void manifest() {
-		if (isAlive)
+		if (isAlive())
 			super.manifestInternal(this);
-	}
-
-	@Override
-	void move(MovementTypes mt) {
-
 	}
 
 	@Override
@@ -46,9 +37,9 @@ class Alien extends GObject {
 
 	@Override
 	void destroy() {
-		if (isAlive) {
+		if (isAlive()) {
 			getSound().play();
-			isAlive = false;
+			super.destroy();
 
 
 		}
