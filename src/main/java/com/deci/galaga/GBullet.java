@@ -20,7 +20,7 @@ class GBullet extends GObject {
 		oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
 		rotation = GalagaEngine.atan2(oldPoint.getY() - getY(), oldPoint.getX() - getX()) / GalagaEngine.PI * 180;
 		speed = 10;
-		super.setSound(Assets.getSound("fire1.wav"));
+		super.setSound(Assets.getSound("player-shoot.mp3"));
 	}
 
 	private void checkHit() {
@@ -47,6 +47,7 @@ class GBullet extends GObject {
 		setX(getX() + GalagaEngine.cos(rotation / 180 * GalagaEngine.PI) * speed);
 		setY(getY() + GalagaEngine.sin(rotation / 180 * GalagaEngine.PI) * speed);
 		this.manifest();
+		getSound().play();
 		if (getY() <= 0f || getY() >= GalagaEngine.WIDTH) {
 			Common.cast(GalagaEngine.ship, Ship.class).bulletCache.remove(this);
 			this.destroy();
@@ -65,7 +66,7 @@ class GBullet extends GObject {
 
 	@Override
 	void destroy() {
-		Common.printf("Destroying GBullet %s", this.toString());
+		Common.printf("Destroying GBullet [%s]", this.toString());
 	}
 
 	@Override

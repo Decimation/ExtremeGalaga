@@ -64,7 +64,7 @@ public class GalagaEngine extends PApplet {
 		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
 		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
 		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav", ResourceType.URL));
-		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "pewpew.wav", ResourceType.URL));
+		Assets.add(new AudioResource("https://raw.githubusercontent.com/metalslugx3/Galaga/master/Galaga/assets/sounds/", "player-shoot.mp3", ResourceType.URL));
 
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);

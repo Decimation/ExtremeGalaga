@@ -42,7 +42,6 @@ final class Ship extends GObject {
 		super.manifestInternal(this);
 	}
 
-	@Override
 	void move(MovementTypes mt) {
 		switch (mt) {
 			case LEFT:

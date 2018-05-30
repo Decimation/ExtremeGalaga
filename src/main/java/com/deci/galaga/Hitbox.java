@@ -42,8 +42,6 @@ class Hitbox {
 		GalagaEngine.instance.stroke(0, 255, 0);
 		GalagaEngine.instance.line(intersection.x, intersection.y, 800, 800);
 		GalagaEngine.instance.line(intersection.x, intersection.y, 800, intersection.y);
-
-
 	}
 
 	static boolean collision(final GObject a, final GObject b) {
