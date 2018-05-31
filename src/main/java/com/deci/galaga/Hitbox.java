@@ -22,6 +22,7 @@ class Hitbox {
 
 	/**
 	 * Draw a GObject's hitbox.
+	 *
 	 * @param obj GObject's hitbox to draw.
 	 */
 	static void apply(final GObject obj) {
@@ -56,6 +57,7 @@ class Hitbox {
 
 	/**
 	 * Detects if there is an intersection between two GObjects' hitboxes.
+	 *
 	 * @param a First GObject
 	 * @param b Second GObject
 	 * @return Whether there is an intersection between the two hitboxes.
@@ -64,7 +66,7 @@ class Hitbox {
 		Rectangle ar = new Rectangle((int) a.getX(), (int) a.getY(), a.getGameImage().width, a.getGameImage().height);
 		Rectangle br = new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height);
 		if (a.isAlive() && b.isAlive() && ar.intersects(br)) {
-			Common.printf(Debug.HITBOX,"Intersection detected @ (%d, %d)", ar.intersection(br).x, ar.intersection(br).y);
+			Common.printf(Debug.HITBOX, "Intersection detected @ (%d, %d)", ar.intersection(br).x, ar.intersection(br).y);
 			return true;
 		}
 		return false;

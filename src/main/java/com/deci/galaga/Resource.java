@@ -3,23 +3,20 @@ package com.deci.galaga;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.SneakyThrows;
 
 @AllArgsConstructor
 abstract class Resource {
 
-	@Getter(AccessLevel.PACKAGE)
-	private final String path;
-
-	@Getter(AccessLevel.PACKAGE)
-	private final String fileName;
-
 	private static final String NULL_RESOURCE = "N/A";
+	@Getter(AccessLevel.PACKAGE)
+	private final        String path;
+	@Getter(AccessLevel.PACKAGE)
+	private final        String fileName;
 
 	Resource() {
 		path = NULL_RESOURCE;
 		fileName = NULL_RESOURCE;
-		Common.printf(Debug.RESOURCE, "Warning: null resource created");
+		//Common.printf(Debug.RESOURCE, "Warning: null resource created");
 	}
 
 	final String getFullPath() {

@@ -1,13 +1,14 @@
 package com.deci.galaga;
 
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 final class Ship extends GObject implements IMoveable {
 
 	private static final float LERP_DELTA = 0.1f;
 	List<GBullet> bulletCache;
+
 	/**
 	 * How many x pixels to move by when changing coordinates
 	 */
@@ -19,7 +20,7 @@ final class Ship extends GObject implements IMoveable {
 		setY(500f);
 		setHealth(100f);
 		xDelta = 25f;
-		bulletCache = new ArrayList<>();
+		bulletCache = new CopyOnWriteArrayList<>();
 	}
 
 
@@ -72,10 +73,5 @@ final class Ship extends GObject implements IMoveable {
 			default:
 				move(c);
 		}
-	}
-
-	@Override
-	void destroy() {
-		super.destroy();
 	}
 }

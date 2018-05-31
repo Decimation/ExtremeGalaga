@@ -19,11 +19,12 @@ class GBullet extends GObject {
 		setY(origin.getY());
 		final Point oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
 		rotation = GalagaEngine.atan2(oldPoint.getY() - getY(), oldPoint.getX() - getX()) / GalagaEngine.PI * 180;
-		super.rotate(rotation-90);
+		super.rotate(rotation - 90);
 		speed = 10f;
 		damage = 5f;
 		hasFired = false;
 		super.setSound(Assets.getSound("smg1_fire1.wav"));
+		//Common.printf(toString());
 	}
 
 	private void hitScan() {
@@ -31,7 +32,7 @@ class GBullet extends GObject {
 			if (alien.isAlive() && Hitbox.collision(alien, this)) {
 				alien.damage(damage);
 				Hitbox.drawIntersection(alien, this);
-				this.destroy();
+				this.flagForDeletion();
 			}
 		}
 	}
@@ -58,21 +59,14 @@ class GBullet extends GObject {
 		setY(getY() + GalagaEngine.sin(rotation / 180 * GalagaEngine.PI) * speed);
 		this.manifest();
 
-		if (getY() <= 0f || getY() >= GalagaEngine.WIDTH) {
-			this.destroy();
+		if (getX() <= 0f || getY() <= 0f || getY() >= GalagaEngine.WIDTH || getX() >= GalagaEngine.WIDTH) {
+			this.flagForDeletion();
 		}
 	}
 
 	@Override
 	void handleKey(final char c) {
 
-	}
-
-	@Override
-	void destroy() {
-		Common.printf("Destroying GBullet [%s]", this.toString());
-		Common.cast(GalagaEngine.ship, Ship.class).bulletCache.remove(this);
-		super.destroy();
 	}
 
 	@Override

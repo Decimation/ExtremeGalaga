@@ -35,8 +35,7 @@ class SequentialImage {
 	void advanceEvery(final Point p, int advanceEvery) {
 		if (++callNumber % advanceEvery == 0) {
 			advance(p);
-		}
-		else {
+		} else {
 			if (currentIndex < frames.length) {
 				GalagaEngine.instance.image(((ImageResource) frames[currentIndex]).getImage(), p.getX(), p.getY());
 			}

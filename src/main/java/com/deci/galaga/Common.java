@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 class Common {
+
+	private static final Set<Debug> disabled = new HashSet<>();
 
 	private Common() {
 	}
 
-	private static final Set<Debug> disabled = new HashSet<>();
-
 	/**
 	 * Disables logging for specified Debug type
+	 *
 	 * @param dbg Type of logging to disable
 	 */
 	static void disableLog(Debug... dbg) {
@@ -27,7 +30,7 @@ class Common {
 
 	static void printf(Debug dbg, String s, Object... fmt) {
 		if (!disabled.contains(dbg))
-			System.out.printf("[%s] %s\n", dbg.toString().toLowerCase(), String.format(s, fmt));
+			System.out.printf("[%s] %s\n", dbg.toString().toUpperCase(), String.format(s, fmt));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -5,10 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import processing.core.PImage;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.UUID;
-
 /**
  * Abstract game object
  *
@@ -18,10 +14,10 @@ abstract class GObject {
 
 
 	@Getter(AccessLevel.PACKAGE)
-	private final    String  ID;
+	private final    String ID;
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
-	private volatile float x, y;
+	private volatile float  x, y;
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private float health;
@@ -34,6 +30,8 @@ abstract class GObject {
 
 	private AudioResource hitsound;
 
+	private boolean eligibleForDeletion;
+
 	GObject(final ImageResource img) {
 		this();
 		img.alphatize();
@@ -41,6 +39,11 @@ abstract class GObject {
 		this.isAlive = true;
 		hitsound = Assets.getSound("hitmarker.wav");
 		hitsound.setVolume(-15f);
+		eligibleForDeletion = false;
+	}
+
+	private GObject() {
+		ID = ShortUUID.next();
 	}
 
 	final void damage(float dmg) {
@@ -48,16 +51,23 @@ abstract class GObject {
 		setHealth(getHealth() - dmg);
 		final float delta = before - getHealth();
 		if (health <= 0) {
-			destroy();
+			this.destroy();
 		}
-		Common.printf("%f -> %f (-%f)", before, getHealth(), delta);
-		//DamageNumber.draw(this, delta);
+		//Common.printf("%f -> %f (-%f)", before, getHealth(), delta);
 		hitsound.play();
-
 	}
 
-	private GObject() {
-		ID = ShortUUID.next();
+	final boolean flaggedForDeletion() {
+		return eligibleForDeletion;
+	}
+
+	final void flagForDeletion() {
+		if (eligibleForDeletion) {
+			// Already flagged
+			return;
+		}
+		eligibleForDeletion = true;
+		Common.printf(Debug.HYPERVISOR, "Flagged object %s for deletion", this.toString());
 	}
 
 	final void rotate(double degrees) {
@@ -80,13 +90,23 @@ abstract class GObject {
 		this.sound = sound;
 	}
 
+	/**
+	 * Implementation should update the object's state when it is called.
+	 */
 	abstract void update();
 
+	/**
+	 * Implementation should draw the object.
+	 */
 	abstract void manifest();
 
+	/**
+	 * Frees up resources allocated by a GObject instance.
+	 * This should also draw the object being visually destroyed if necessary.
+	 * This should only be called by the Hypervisor.
+	 */
 	void destroy() {
 		isAlive = false;
-
 	}
 
 	abstract void handleKey(final char c);
@@ -102,7 +122,7 @@ abstract class GObject {
 
 	@Override
 	public String toString() {
-		return String.format("ID: %s @ %s with %f HP", ID.toString(), new Point(x, y), health);
+		return String.format("ID: %s @ %s with %f HP (%s)", ID.toString(), new Point(x, y), health, isAlive ? "alive" : "dead");
 	}
 
 }

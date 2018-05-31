@@ -1,8 +1,7 @@
 package com.deci.galaga;
 
-import javafx.util.Pair;
 import processing.core.PApplet;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -12,10 +11,10 @@ public class GalagaEngine extends PApplet {
 	 * A CopyOnWriteArrayList is required for concurrent modification
 	 */
 	static final         List<GObject> aliens     = new CopyOnWriteArrayList<>();
-	private static final String        GAME_TITLE = "Extreme Galaga";
-	private static final int           FPS        = 60;
 	static final         int           WIDTH      = 800;
 	static final         int           HEIGHT     = 800;
+	private static final String        GAME_TITLE = "Extreme Galaga";
+	private static final int           FPS        = 60;
 	static               PApplet       instance;
 
 	static GObject ship;
@@ -33,6 +32,7 @@ public class GalagaEngine extends PApplet {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
 		Common.disableLog(Debug.SOUND);
+
 	}
 
 	@Override
@@ -54,6 +54,8 @@ public class GalagaEngine extends PApplet {
 
 		aliens.add(new Alien()); //tmp
 		//aliens.add(new Alien2());
+
+		Hypervisor.init();
 	}
 
 
@@ -86,7 +88,6 @@ public class GalagaEngine extends PApplet {
 			if (!g.isAlive()) {
 				if (g instanceof Alien)
 					((Alien) g).explode();
-				g.destroy();
 			}
 		}
 
