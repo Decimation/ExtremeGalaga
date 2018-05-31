@@ -168,14 +168,10 @@ class AudioResource extends Resource {
 	synchronized void play(float db) {
 		Thread snd = new Thread(() -> {
 
-
-
 			int frameSize = format.getFrameSize();
 			float frameRate = format.getFrameRate();
 			long durationInMilliSeconds =
 					(long) (((float) length / (frameSize * frameRate)) * 1000);
-
-
 
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
@@ -200,8 +196,8 @@ class AudioResource extends Resource {
 			}
 			clip.stop();
 			Common.printf(Debug.SOUND,"%d: sound stopped", System.currentTimeMillis() - startTime);
-			clip.drain();
-			clip.close();
+			//clip.drain();
+			//clip.close();
 		});
 		snd.setDaemon(true);
 		snd.start();
