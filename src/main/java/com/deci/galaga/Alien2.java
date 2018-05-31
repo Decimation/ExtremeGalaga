@@ -23,6 +23,17 @@ public class Alien2 extends GObject {
 
     @Override
     void update() {
+    while(x<800 && X>0) {
+        while(y > x - 5 || y < x + 5) {
+            while (y > x - 5) {
+                y--;
+            }
+
+            while (y < x + 5) {
+                y++;
+            }
+        }
+    }
 
 
     }
