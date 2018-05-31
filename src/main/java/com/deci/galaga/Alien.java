@@ -39,6 +39,7 @@ class Alien extends GObject {
 	void destroy() {
 		if (isAlive()) {
 			getSound().play();
+
 			//GalagaEngine.aliens.remove(this);
 			//explode();
 			super.destroy();

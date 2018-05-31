@@ -32,7 +32,7 @@ public class GalagaEngine extends PApplet {
 	public void settings() {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
-		Common.disableLog(Debug.SOUND);
+		//Common.disableLog(Debug.SOUND);
 	}
 
 	@Override
@@ -42,10 +42,10 @@ public class GalagaEngine extends PApplet {
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga_bullet.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "enemy1.png"));
-		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "energy_disintegrate4.wav", ResourceType.URL));
-		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav", ResourceType.URL));
-		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "smg1_fire1.wav", ResourceType.URL));
-		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "hitmarker.wav", ResourceType.URL));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "energy_disintegrate4.wav"));
+		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav"));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "smg1_fire1.wav"));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "hitmarker.wav"));
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);
 
@@ -58,12 +58,6 @@ public class GalagaEngine extends PApplet {
 
 	@Override
 	public void keyTyped() {
-		switch (key) {
-			case ' ':
-				//todo
-				//((Ship) ship).fire();
-				break;
-		}
 	}
 
 
