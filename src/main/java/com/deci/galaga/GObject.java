@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import processing.core.PImage;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.UUID;
 
 /**
@@ -16,7 +18,7 @@ abstract class GObject {
 
 
 	@Getter(AccessLevel.PACKAGE)
-	private final    UUID  ID;
+	private final    String  ID;
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private volatile float x, y;
@@ -24,18 +26,42 @@ abstract class GObject {
 	@Setter(AccessLevel.PACKAGE)
 	private float health;
 
+	@Getter(AccessLevel.PACKAGE)
+	private boolean isAlive;
 
 	private Resource image;
 	private Resource sound;
+
+	private AudioResource hitsound;
 
 	GObject(final ImageResource img) {
 		this();
 		img.alphatize();
 		this.image = img;
+		this.isAlive = true;
+		hitsound = Assets.getSound("hitmarker.wav");
+		hitsound.setVolume(-15f);
+	}
+
+	final void damage(float dmg) {
+		float before = getHealth();
+		setHealth(getHealth() - dmg);
+		final float delta = before - getHealth();
+		if (health <= 0) {
+			destroy();
+		}
+		Common.printf("%f -> %f (-%f)", before, getHealth(), delta);
+		//DamageNumber.draw(this, delta);
+		hitsound.play();
+
 	}
 
 	private GObject() {
-		ID = UUID.randomUUID();
+		ID = ShortUUID.next();
+	}
+
+	final void rotate(double degrees) {
+		image = ImageResource.rotate(getImageResource(), degrees);
 	}
 
 	final ImageResource getImageResource() {
@@ -58,22 +84,15 @@ abstract class GObject {
 
 	abstract void manifest();
 
-	abstract void move(final MovementTypes mt);
+	void destroy() {
+		isAlive = false;
 
-	abstract void destroy();
+	}
 
 	abstract void handleKey(final char c);
 
 	final void manifestInternal(final GObject g) {
 		GalagaEngine.instance.image(g.getGameImage(), g.getX(), g.getY());
-	}
-
-	final void move(char k) {
-		if (k == 'a') {
-			move(MovementTypes.LEFT);
-		} else if (k == 'd') {
-			move(MovementTypes.RIGHT);
-		}
 	}
 
 

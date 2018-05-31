@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Assets {
-	static final         String                EG_GITHUB_ASSETS_ROOT = "https://raw.githubusercontent.com/Decimation/ExtremeGalaga/master/assets/";
-	private static final Map<String, Resource> resources             = new HashMap<>();
-	private static final String                GITHUB_ASSETS_ROOT    = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/";
-	static final         String                GITHUB_ASSETS_IMAGES  = GITHUB_ASSETS_ROOT + "images/";
-	static final         String                GITHUB_ASSETS_SOUNDS  = GITHUB_ASSETS_ROOT + "sounds/";
+	static final         String                EG_GITHUB_ASSETS_ROOT  = "https://raw.githubusercontent.com/Decimation/ExtremeGalaga/master/assets/";
+	static final         String                EG_GITHUB_ASSETS_SOUND = EG_GITHUB_ASSETS_ROOT + "sound/";
+	private static final Map<String, Resource> resources              = new HashMap<>();
+	private static final String                GITHUB_ASSETS_ROOT     = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/";
+	static final         String                GITHUB_ASSETS_IMAGES   = GITHUB_ASSETS_ROOT + "images/";
+	static final         String                GITHUB_ASSETS_SOUNDS   = GITHUB_ASSETS_ROOT + "sounds/";
 
 	private Assets() {
 	}

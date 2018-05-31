@@ -4,7 +4,7 @@ package com.deci.galaga;
 import java.util.ArrayList;
 import java.util.List;
 
-final class Ship extends GObject {
+final class Ship extends GObject implements IMoveable {
 
 	private static final float LERP_DELTA = 0.1f;
 	List<GBullet> bulletCache;
@@ -43,7 +43,7 @@ final class Ship extends GObject {
 	}
 
 	@Override
-	void move(MovementTypes mt) {
+	public void move(MovementTypes mt) {
 		switch (mt) {
 			case LEFT:
 				setX(GalagaEngine.lerp(getX(), getX() - xDelta, LERP_DELTA));
@@ -53,6 +53,15 @@ final class Ship extends GObject {
 				break;
 			default:
 				break;
+		}
+	}
+
+	@Override
+	public void move(char c) {
+		if (c == 'a') {
+			move(MovementTypes.LEFT);
+		} else if (c == 'd') {
+			move(MovementTypes.RIGHT);
 		}
 	}
 
@@ -67,6 +76,6 @@ final class Ship extends GObject {
 
 	@Override
 	void destroy() {
-
+		super.destroy();
 	}
 }
