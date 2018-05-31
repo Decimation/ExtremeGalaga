@@ -39,7 +39,7 @@ abstract class GObject {
 		img.alphatize();
 		this.image = img;
 		this.isAlive = true;
-		hitsound = Assets.getSound("hitsound (2).wav");
+		hitsound = Assets.getSound("hitmarker.wav");
 		hitsound.setVolume(-15f);
 	}
 

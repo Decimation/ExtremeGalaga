@@ -35,8 +35,6 @@ public class GalagaEngine extends PApplet {
 		Common.disableLog(Debug.SOUND);
 	}
 
-	private static final String LOCAL_SOUNDS = "C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\";
-
 	@Override
 	public void setup() {
 		instance = this;
@@ -44,11 +42,10 @@ public class GalagaEngine extends PApplet {
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga_bullet.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "enemy1.png"));
-		Assets.add(new AudioResource(LOCAL_SOUNDS, "energy_disintegrate4.wav", ResourceType.FILE));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "energy_disintegrate4.wav", ResourceType.URL));
 		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav", ResourceType.URL));
-		Assets.add(new AudioResource(LOCAL_SOUNDS + "HL2 sound\\weapons\\smg1\\", "smg1_fire1.wav", ResourceType.FILE));
-		//Assets.add(new AudioResource("https://raw.githubusercontent.com/metalslugx3/Galaga/master/Galaga/assets/sounds/", "player-shoot.mp3", ResourceType.URL));
-		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\TF2\\Hitsounds\\Hitmarker\\", "hitsound (2).wav", ResourceType.FILE));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "smg1_fire1.wav", ResourceType.URL));
+		Assets.add(new AudioResource(Assets.EG_GITHUB_ASSETS_SOUND, "hitmarker.wav", ResourceType.URL));
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);
 
