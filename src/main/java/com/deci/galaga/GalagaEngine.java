@@ -1,15 +1,17 @@
 package com.deci.galaga;
 
-
 import javafx.util.Pair;
 import processing.core.PApplet;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GalagaEngine extends PApplet {
 
-	static final         List<GObject> aliens     = new ArrayList<>();
+	/**
+	 * A CopyOnWriteArrayList is required for concurrent modification
+	 */
+	static final         List<GObject> aliens     = new CopyOnWriteArrayList<>();
 	private static final String        GAME_TITLE = "Extreme Galaga";
 	private static final int           FPS        = 60;
 	static final         int           WIDTH      = 800;
@@ -26,31 +28,14 @@ public class GalagaEngine extends PApplet {
 
 	}
 
-	/**
-	 * Determines if an alien exists at Point p
-	 *
-	 * @param p Point to check for an alien object.
-	 * @return A Pair containing true and the alien found at the point. A Pair
-	 * containing false and null otherwise.
-	 */
-	static Pair<Boolean, GObject> alienAtPoint(final Point p) {
-
-		for (final GObject g : aliens) {
-
-			if (g.getPoint().equalsInt(p)) {
-				System.out.printf("Alien with UUID %s hit at point %s\n", g.getID(), g.getPoint());
-				return new Pair<>(true, g);
-			}
-
-		}
-		return new Pair<>(false, null);
-	}
-
 	@Override
 	public void settings() {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
+		Common.disableLog(Debug.SOUND);
 	}
+
+	private static final String LOCAL_SOUNDS = "C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\";
 
 	@Override
 	public void setup() {
@@ -59,21 +44,18 @@ public class GalagaEngine extends PApplet {
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga_bullet.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "galaga.png"));
 		Assets.add(new ImageResource(Assets.GITHUB_ASSETS_IMAGES, "enemy1.png"));
-		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "energy_disintegrate4.wav"));
-		//Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\Audio resources\\Game audio resources\\Source engine sounds\\", "fire1.wav"));
+		Assets.add(new AudioResource(LOCAL_SOUNDS, "energy_disintegrate4.wav", ResourceType.FILE));
 		Assets.add(new AudioResource(Assets.GITHUB_ASSETS_SOUNDS, "enemy1death.wav", ResourceType.URL));
+		Assets.add(new AudioResource(LOCAL_SOUNDS + "HL2 sound\\weapons\\smg1\\", "smg1_fire1.wav", ResourceType.FILE));
 		//Assets.add(new AudioResource("https://raw.githubusercontent.com/metalslugx3/Galaga/master/Galaga/assets/sounds/", "player-shoot.mp3", ResourceType.URL));
-
+		Assets.add(new AudioResource("C:\\Users\\Viper\\Desktop\\TF2\\Hitsounds\\Hitmarker\\", "hitsound (2).wav", ResourceType.FILE));
 		ship = new Ship();
 		surface.setTitle(GAME_TITLE);
 
 		smooth();
 		frameRate(FPS);
 
-
 		aliens.add(new Alien()); //tmp
-
-
 	}
 
 
@@ -99,7 +81,6 @@ public class GalagaEngine extends PApplet {
 		for (int i = Common.cast(ship, Ship.class).bulletCache.size() - 1; i >= 0; i--) {
 			GBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
 			bullet.update();
-
 		}
 		instance.rect(0, 700, Common.cast(ship, Ship.class).bulletCache.size(), 20);
 
@@ -110,8 +91,9 @@ public class GalagaEngine extends PApplet {
 		for (final GObject g : aliens) {
 			g.manifest();
 			Hitbox.apply(g);
-			if (!((Alien) g).isAlive()) {
+			if (!g.isAlive()) {
 				((Alien) g).explode();
+				g.destroy();
 			}
 		}
 

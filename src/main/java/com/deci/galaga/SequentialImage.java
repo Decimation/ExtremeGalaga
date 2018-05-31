@@ -25,8 +25,6 @@ class SequentialImage {
 	void advance(final Point p) {
 		if (currentIndex < frames.length) {
 			GalagaEngine.instance.image(((ImageResource) frames[currentIndex++]).getImage(), p.getX(), p.getY());
-			//Common.printf("currentIndex: %d", currentIndex);
-			//Common.printf("callNumber: %d", callNumber);
 		}
 	}
 
@@ -37,6 +35,11 @@ class SequentialImage {
 	void advanceEvery(final Point p, int advanceEvery) {
 		if (++callNumber % advanceEvery == 0) {
 			advance(p);
+		}
+		else {
+			if (currentIndex < frames.length) {
+				GalagaEngine.instance.image(((ImageResource) frames[currentIndex]).getImage(), p.getX(), p.getY());
+			}
 		}
 	}
 

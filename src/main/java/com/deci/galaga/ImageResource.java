@@ -4,6 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import processing.core.PImage;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 class ImageResource extends Resource {
 
 	@Getter(AccessLevel.PACKAGE)
@@ -17,6 +20,19 @@ class ImageResource extends Resource {
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
+	}
+
+	private ImageResource() {
+		super();
+	}
+
+	static ImageResource rotate(ImageResource ir, double degrees) {
+		final Image sub = ir.getImage().getImage(); // Java in a nutshell
+		Image rotated = ImgOps.rotateBy((BufferedImage) sub, degrees);
+		PImage newPImg = new PImage(rotated);
+		ImageResource cpy = new ImageResource();
+		cpy.image = newPImg;
+		return cpy;
 	}
 
 	/**

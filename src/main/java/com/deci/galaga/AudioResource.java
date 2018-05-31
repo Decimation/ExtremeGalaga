@@ -1,54 +1,81 @@
 package com.deci.galaga;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.CountDownLatch;
+import java.net.URLConnection;
 
 class AudioResource extends Resource {
 
 
-	private int              plays;
+	private static boolean tryToInterruptSound = false;
+	private static long    mainTimeOut         = 3000;
+	private static long    startTime           = System.currentTimeMillis();
+	private long length;
 	private AudioInputStream stream;
+	private ResourceType type;
+	@Setter(AccessLevel.PACKAGE)
+	@Getter(AccessLevel.PACKAGE)
+	private float volume;
 
 	AudioResource(String path, String fileName) {
-		super(path, fileName);
-		try {
-			stream = AudioSystem.getAudioInputStream(
-					new File(this.getFullPath()));
-		} catch (Exception x) {
-		}
+		this(path, fileName, ResourceType.URL);
 	}
 
 	AudioResource(String path, String fileName, ResourceType type) {
-		this(path, fileName);
+		super(path, fileName);
+		this.type = type;
+		volume = -10f;
+	}
+
+	private void init() {
 		switch (type) {
 			case FILE:
 				try {
+					File f = new File(this.getFullPath());
 					stream = AudioSystem.getAudioInputStream(
-							new File(this.getFullPath()));
+							f);
+					length = f.length();
 				} catch (Exception x) {
+					x.printStackTrace();
 				}
 
 				break;
 			case URL:
 				try {
+					URL u = new URL(this.getFullPath());
 					stream = AudioSystem.getAudioInputStream(
-							new URL(this.getFullPath()));
+							u);
+					length = Common.getFileSize(u);
 				} catch (Exception x) {
+					x.printStackTrace();
 				}
 
 				break;
 		}
 	}
 
+
+
 	synchronized void play(float db) {
-		new Thread(() -> {
-			CountDownLatch syncLatch = new CountDownLatch(1);
-
+		init();
+		Thread soundThread = new Thread(() -> {
 			try {
-
 				Clip clip = AudioSystem.getClip();
+
+				AudioFormat format = stream.getFormat();
+
+				int frameSize = format.getFrameSize();
+				float frameRate = format.getFrameRate();
+				long durationInMilliSeconds =
+						(long) (((float) length / (frameSize * frameRate)) * 1000);
+
 				clip.open(stream);
 
 				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -57,25 +84,39 @@ class AudioResource extends Resource {
 				//float gain = (range * db) + gainControl.getMinimum();
 				gainControl.setValue(db);
 
-				// Listener which allow method return once sound is completed
-				clip.addLineListener(e -> {
-					if (e.getType() == LineEvent.Type.STOP) {
-						syncLatch.countDown();
-					}
-				});
-
+				clip.setFramePosition(0);
 				clip.start();
+				Common.printf(Debug.SOUND, "%d: sound started", System.currentTimeMillis() - startTime);
+				Thread.sleep(durationInMilliSeconds);
+				while (true) {
+					if (!clip.isActive()) {
+						Common.printf(Debug.SOUND,"%d: sound completed", System.currentTimeMillis() - startTime);
+						break;
+					}
+					long fPos = (long) (clip.getMicrosecondPosition() / 1000);
+					long left = durationInMilliSeconds - fPos;
+					Common.printf(Debug.SOUND, "%d: time left: %d", System.currentTimeMillis() - startTime, left);
+					if (left > 0) Thread.sleep(left);
+				}
+				clip.stop();
+				Common.printf(Debug.SOUND,"%d: sound stopped", System.currentTimeMillis() - startTime);
+				clip.drain();
+				clip.close();
+				stream.close();
 
-
-				syncLatch.await();
-			} catch (Exception x) {
-				x.printStackTrace();
+			} catch (LineUnavailableException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				Common.printf(Debug.SOUND, "%d: sound interrupted", System.currentTimeMillis() - startTime);
 			}
-			plays++;
-		}).start();
+		});
+		soundThread.setDaemon(true);
+		soundThread.start();
 	}
 
 	synchronized void play() {
-		play(-15f);
+		play(volume);
 	}
 }
