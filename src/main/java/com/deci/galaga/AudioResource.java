@@ -164,8 +164,9 @@ class AudioResource extends Resource {
 		play(-10f);
 	}
 
-	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS FFS
+	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS
 	synchronized void play(float db) {
+
 		Thread snd = new Thread(() -> {
 
 			int frameSize = format.getFrameSize();
@@ -179,6 +180,9 @@ class AudioResource extends Resource {
 			//float gain = (range * db) + gainControl.getMinimum();
 			gainControl.setValue(db);
 
+			if (clip.isRunning()) {
+				clip.stop();
+			}
 			clip.setFramePosition(0);
 			clip.start();
 			Common.printf(Debug.SOUND, "%d: sound started", System.currentTimeMillis() - startTime);
@@ -196,6 +200,7 @@ class AudioResource extends Resource {
 			}
 			clip.stop();
 			Common.printf(Debug.SOUND,"%d: sound stopped", System.currentTimeMillis() - startTime);
+
 			//clip.drain();
 			//clip.close();
 		});

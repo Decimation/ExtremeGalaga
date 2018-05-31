@@ -1,36 +1,32 @@
 package com.deci.galaga;
 
 public class Alien2 extends GObject {
-    private static final String IMG_URL = "https://raw.githubusercontent.com/jsvana/galaga/master/assets/images/enemy1.png";
+    private final SequentialImage si;
 
 
     Alien2() {
-        super(IMG_URL);
-        super.setY(100);
-        super.setX(10);
-        isAlive=true;
+		super(Assets.getImage("enemy1.png"));
+		super.setY(200);
+		super.setX(10);
+		//super.setSound(Assets.getSound("enemy1death.wav"));
+		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
+		super.setHealth(10f);
+		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
 
     }
 
-    boolean isAlive() {
-        return isAlive;
-    }
-
-
-    void draw() {
-        GalagaEngine.instance.image(this.getGameImg(), this.getX(), this.getY());
-    }
 
     @Override
     void update() {
-    while(x<800 && X>0) {
-        while(y > x - 5 || y < x + 5) {
-            while (y > x - 5) {
-                y--;
+    while(getX()<800 && getX()>0) {
+        while(getY() > getX() - 5 || getX() < getX() + 5) {
+            while (getY() > getX() - 5) {
+                setY(getY()-1);
             }
 
-            while (y < x + 5) {
-                y++;
+            while (getY() < getX() + 5) {
+                setY(getY()+1);
+
             }
         }
     }
@@ -40,14 +36,10 @@ public class Alien2 extends GObject {
 
     @Override
     void manifest() {
-        if (isAlive)
+        if (isAlive())
             super.manifestInternal(this);
     }
 
-    @Override
-    void move(MovementTypes mt) {
-
-    }
 
     @Override
     void handleKey(final char c) {
@@ -60,12 +52,13 @@ public class Alien2 extends GObject {
 
     @Override
     void destroy() {
-        if (isAlive) {
-            getSound().play();
-            isAlive = false;
+		if (isAlive()) {
+			getSound().play();
 
-
-        }
+			GalagaEngine.aliens.remove(this);
+			//explode();
+			super.destroy();
+		}
 
 
     }

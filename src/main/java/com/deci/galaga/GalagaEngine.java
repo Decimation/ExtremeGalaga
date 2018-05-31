@@ -32,7 +32,7 @@ public class GalagaEngine extends PApplet {
 	public void settings() {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
-		//Common.disableLog(Debug.SOUND);
+		Common.disableLog(Debug.SOUND);
 	}
 
 	@Override
@@ -53,6 +53,7 @@ public class GalagaEngine extends PApplet {
 		frameRate(FPS);
 
 		aliens.add(new Alien()); //tmp
+		//aliens.add(new Alien2());
 	}
 
 
@@ -83,7 +84,8 @@ public class GalagaEngine extends PApplet {
 			g.manifest();
 			Hitbox.apply(g);
 			if (!g.isAlive()) {
-				((Alien) g).explode();
+				if (g instanceof Alien)
+					((Alien) g).explode();
 				g.destroy();
 			}
 		}

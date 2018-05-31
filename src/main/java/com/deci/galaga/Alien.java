@@ -33,6 +33,7 @@ class Alien extends GObject {
 
 	void explode() {
 		si.advanceEvery(this.getPoint(), 5);
+		Common.printf("explode");
 	}
 
 	@Override
@@ -40,7 +41,7 @@ class Alien extends GObject {
 		if (isAlive()) {
 			getSound().play();
 
-			//GalagaEngine.aliens.remove(this);
+			GalagaEngine.aliens.remove(this);
 			//explode();
 			super.destroy();
 		}
