@@ -71,4 +71,11 @@ class Hitbox {
 		}
 		return false;
 	}
+
+	static boolean collidesWithAliens(final GObject a) {
+		for (GObject b : GalagaEngine.aliens) {
+			if (collision(a, b)) return true;
+		}
+		return false;
+	}
 }

@@ -1,6 +1,10 @@
 package com.deci.galaga;
 
 class Hypervisor {
+
+	/**
+	 * The delay, in ms, between Hypervisor sweeps
+	 */
 	private static long   pollingMs;
 	private static Thread internalVisor;
 

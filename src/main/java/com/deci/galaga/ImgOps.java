@@ -8,6 +8,7 @@ class ImgOps {
 
 	private ImgOps() {}
 
+
 	static Image rotateBy(BufferedImage source, double degrees) {
 
 		// The size of the original image
