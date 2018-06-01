@@ -1,6 +1,6 @@
 package com.deci.galaga;
 
-public class Alien2 extends GObject {
+class Alien2 extends GObject {
 	private final SequentialImage si;
 
 
@@ -18,20 +18,7 @@ public class Alien2 extends GObject {
 
 	@Override
 	void update() {
-		while (getX() < 800 && getX() > 0) {
-			while (getY() > getX() - 5 || getX() < getX() + 5) {
-				while (getY() > getX() - 5) {
-					setY(getY() - 1);
-				}
-
-				while (getY() < getX() + 5) {
-					setY(getY() + 1);
-
-				}
-			}
-		}
-
-
+		setX(getX() + 1);
 	}
 
 	@Override
@@ -40,14 +27,13 @@ public class Alien2 extends GObject {
 			super.manifestInternal(this);
 	}
 
-
 	@Override
 	void handleKey(final char c) {
 
 	}
 
 	void explode() {
-		SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png").animate(getPoint());
+		si.advanceEvery(this.getPoint(), 5);
 	}
 
 	@Override
@@ -55,12 +41,10 @@ public class Alien2 extends GObject {
 		if (isAlive()) {
 			getSound().play();
 
-			GalagaEngine.aliens.remove(this);
 			//explode();
+
 			super.destroy();
 		}
-
-
 	}
 }
 //test

@@ -80,7 +80,7 @@ class AudioResource extends Resource {
 			gainControl.setValue(db);
 
 			if (clip.isRunning()) {
-				clip.stop();
+				//clip.stop();
 			}
 			clip.setFramePosition(0);
 			clip.start();

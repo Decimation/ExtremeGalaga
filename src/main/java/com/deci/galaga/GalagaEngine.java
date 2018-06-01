@@ -31,7 +31,7 @@ public class GalagaEngine extends PApplet {
 	public void settings() {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
-		Common.disableLog(Debug.SOUND);
+		//Common.disableLog(Debug.SOUND);
 
 	}
 
@@ -55,6 +55,7 @@ public class GalagaEngine extends PApplet {
 		for (int i = 0; i < 10; i++)
 			aliens.add(new Alien()); //tmp
 		//aliens.add(new Alien2());
+		aliens.add(new Alien2());
 
 		Hypervisor.init();
 	}
@@ -84,11 +85,14 @@ public class GalagaEngine extends PApplet {
 		}
 
 		for (final GObject g : aliens) {
+			g.update();
 			g.manifest();
 			Hitbox.apply(g);
 			if (!g.isAlive()) {
 				if (g instanceof Alien)
 					((Alien) g).explode();
+				if (g instanceof Alien2)
+					((Alien2) g).explode();
 			}
 		}
 

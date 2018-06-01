@@ -9,7 +9,7 @@ class Alien extends GObject {
 	Alien() {
 		super(Assets.getImage("enemy1.png"));
 		super.setY(100);
-		float genX;
+
 		do {
 			super.setX(new Random().nextInt(GalagaEngine.WIDTH - 25));
 		} while (Hitbox.collidesWithAliens(this));
