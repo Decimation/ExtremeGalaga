@@ -1,5 +1,6 @@
 package com.deci.galaga;
 
+import java.util.Random;
 class Alien2 extends GObject {
 	private final SequentialImage si;
 
@@ -18,8 +19,16 @@ class Alien2 extends GObject {
 
 	@Override
 	void update() {
+		int z= new Random().nextInt(2);
+		if (z==1){
 		setX(getX() + 1);
+		setY(getY() +1);}
+		if(z==2){
+			setX(getX() -1);
+			setY(getY() +1);
+		}
 	}
+
 
 	@Override
 	void manifest() {
