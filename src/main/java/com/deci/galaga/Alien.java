@@ -2,7 +2,7 @@ package com.deci.galaga;
 
 import java.util.Random;
 
-class Alien extends GObject {
+class Alien extends GObject implements IEnemy {
 
 	private SequentialImage si;
 
@@ -38,7 +38,8 @@ class Alien extends GObject {
 
 	}
 
-	void explode() {
+	@Override
+	public void explode() {
 		si.advanceEvery(this.getPoint(), 5);
 	}
 

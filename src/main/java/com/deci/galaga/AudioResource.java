@@ -20,6 +20,9 @@ class AudioResource extends Resource {
 	private        float        volume;
 	private        Clip         clip;
 	private        AudioFormat  format;
+	private FloatControl control;
+	private AudioInputStream stream;
+
 
 	AudioResource(String path, String fileName) {
 		this(path, fileName, ResourceType.URL);
@@ -29,7 +32,7 @@ class AudioResource extends Resource {
 		super(path, fileName);
 
 		volume = -10f;
-		AudioInputStream stream = null;
+		//AudioInputStream stream = null;
 		switch (type) {
 			case URL:
 				try {
@@ -59,50 +62,72 @@ class AudioResource extends Resource {
 		}
 	}
 
+	synchronized void close() {
+		clip.close();
+		try {
+			stream.close();
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
+		Common.printf(Debug.SOUND, "Closing");
+	}
+
 	synchronized void play() {
 		play(-10f);
+	}
+
+	private static class SoundThread implements Runnable {
+
+		private final AudioResource res;
+		private final float db;
+
+		SoundThread(final AudioResource res, final float db) {
+			this.res = res;
+			this.db = db;
+		}
+
+		@Override
+		public void run() {
+			int frameSize = res.format.getFrameSize();
+			float frameRate = res.format.getFrameRate();
+			res.control = (FloatControl)  res.clip.getControl(FloatControl.Type.MASTER_GAIN);
+			long durationInMilliSeconds =
+					(long) (((float) res.length / (frameSize * frameRate)) * 1000);
+
+
+
+			//float range = gainControl.getMaximum() - gainControl.getMinimum();
+			//float gain = (range * db) + gainControl.getMinimum();
+			res.control.setValue(db);
+
+			if (res.clip.isRunning()) {
+				res.clip.stop();
+			}
+			res.clip.stop();
+			res.clip.setFramePosition(0);
+			res.clip.start();
+			Common.printf(Debug.SOUND, "%d: sound started", System.currentTimeMillis() - startTime);
+
+			Common.sleep(durationInMilliSeconds);
+			while (true) {
+				if (!res.clip.isActive()) {
+					Common.printf(Debug.SOUND, "%d: sound completed", System.currentTimeMillis() - startTime);
+					break;
+				}
+				long fPos = (res.clip.getMicrosecondPosition() / 1000);
+				long left = durationInMilliSeconds - fPos;
+				Common.printf(Debug.SOUND, "%d: time left: %d", System.currentTimeMillis() - startTime, left);
+				if (left > 0) Common.sleep(left);
+			}
+			res.clip.stop();
+			Common.printf(Debug.SOUND, "%d: sound stopped", System.currentTimeMillis() - startTime);
+		}
 	}
 
 	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS
 	synchronized void play(float db) {
 
-		Thread snd = new Thread(() -> {
-
-			int frameSize = format.getFrameSize();
-			float frameRate = format.getFrameRate();
-			long durationInMilliSeconds =
-					(long) (((float) length / (frameSize * frameRate)) * 1000);
-
-			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-
-			//float range = gainControl.getMaximum() - gainControl.getMinimum();
-			//float gain = (range * db) + gainControl.getMinimum();
-			gainControl.setValue(db);
-
-			if (clip.isRunning()) {
-				//clip.stop();
-			}
-			clip.setFramePosition(0);
-			clip.start();
-			Common.printf(Debug.SOUND, "%d: sound started", System.currentTimeMillis() - startTime);
-
-			Common.sleep(durationInMilliSeconds);
-			while (true) {
-				if (!clip.isActive()) {
-					Common.printf(Debug.SOUND, "%d: sound completed", System.currentTimeMillis() - startTime);
-					break;
-				}
-				long fPos = (clip.getMicrosecondPosition() / 1000);
-				long left = durationInMilliSeconds - fPos;
-				Common.printf(Debug.SOUND, "%d: time left: %d", System.currentTimeMillis() - startTime, left);
-				if (left > 0) Common.sleep(left);
-			}
-			clip.stop();
-			Common.printf(Debug.SOUND, "%d: sound stopped", System.currentTimeMillis() - startTime);
-
-			//clip.drain();
-			//clip.close();
-		});
+		Thread snd = new Thread(new SoundThread(this, db));
 		snd.setDaemon(true);
 		snd.start();
 	}

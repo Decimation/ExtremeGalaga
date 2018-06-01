@@ -60,9 +60,8 @@ public class GalagaEngine extends PApplet {
 		Hypervisor.init();
 	}
 
-
-	@Override
-	public void keyTyped() {
+	static Ship getShip() {
+		return (Ship) ship;
 	}
 
 
@@ -74,11 +73,11 @@ public class GalagaEngine extends PApplet {
 		ship.manifest();
 		Hitbox.apply(ship);
 
-		for (int i = Common.cast(ship, Ship.class).bulletCache.size() - 1; i >= 0; i--) {
-			GBullet bullet = Common.cast(ship, Ship.class).bulletCache.get(i);
+		for (int i = getShip().bulletCache.size() - 1; i >= 0; i--) {
+			GBullet bullet = getShip().bulletCache.get(i);
 			bullet.update();
 		}
-		instance.rect(0, 700, Common.cast(ship, Ship.class).bulletCache.size(), 20);
+		//instance.rect(0, 700, Common.cast(ship, Ship.class).bulletCache.size(), 20);
 
 		if (keyPressed) {
 			Common.autoThread(() -> ship.handleKey(key));
@@ -89,10 +88,7 @@ public class GalagaEngine extends PApplet {
 			g.manifest();
 			Hitbox.apply(g);
 			if (!g.isAlive()) {
-				if (g instanceof Alien)
-					((Alien) g).explode();
-				if (g instanceof Alien2)
-					((Alien2) g).explode();
+				((IEnemy) g).explode();
 			}
 		}
 

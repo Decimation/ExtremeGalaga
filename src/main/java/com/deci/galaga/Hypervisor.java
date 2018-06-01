@@ -34,7 +34,7 @@ class Hypervisor {
 
 
 				int flagged = 0;
-				int nonflagged = 0;
+				int nonFlagged = 0;
 
 				// Sweep aliens
 				if (!GalagaEngine.aliens.isEmpty()) {
@@ -45,24 +45,24 @@ class Hypervisor {
 							GalagaEngine.aliens.remove(obj);
 						}
 						if (!obj.flaggedForDeletion()) {
-							nonflagged++;
+							nonFlagged++;
 						}
 					}
 				}
 
 				flagged = 0;
-				nonflagged = 0;
+				nonFlagged = 0;
 
 				// Sweep bullets
-				if (!((Ship) GalagaEngine.ship).bulletCache.isEmpty()) {
-					for (GBullet bullet : ((Ship) GalagaEngine.ship).bulletCache) {
+				if (!GalagaEngine.getShip().bulletCache.isEmpty()) {
+					for (GBullet bullet : GalagaEngine.getShip().bulletCache) {
 						if (bullet.flaggedForDeletion()) {
 							flagged++;
 							bullet.destroy();
-							((Ship) GalagaEngine.ship).bulletCache.remove(bullet);
+							GalagaEngine.getShip().bulletCache.remove(bullet);
 						}
 						if (!bullet.flaggedForDeletion()) {
-							nonflagged++;
+							nonFlagged++;
 						}
 					}
 				}

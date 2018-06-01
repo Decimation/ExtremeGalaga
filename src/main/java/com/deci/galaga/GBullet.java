@@ -73,4 +73,9 @@ class GBullet extends GObject {
 	public String toString() {
 		return super.toString();
 	}
+
+	@Override
+	void destroy() {
+		super.destroy();
+	}
 }
