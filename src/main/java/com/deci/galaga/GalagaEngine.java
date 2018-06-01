@@ -31,7 +31,7 @@ public class GalagaEngine extends PApplet {
 	public void settings() {
 		size(WIDTH, HEIGHT);
 		Hitbox.disable();
-		//Common.disableLog(Debug.SOUND);
+		Common.disableLog(Debug.SOUND);
 
 	}
 
@@ -54,7 +54,7 @@ public class GalagaEngine extends PApplet {
 
 		for (int i = 0; i < 10; i++)
 			aliens.add(new Alien()); //tmp
-		//aliens.add(new Alien2());
+
 		aliens.add(new Alien2());
 
 		Hypervisor.init();
