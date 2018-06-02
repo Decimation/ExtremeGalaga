@@ -11,17 +11,17 @@ import java.net.URL;
 class AudioResource extends Resource {
 
 
-	private static boolean      tryToInterruptSound = false;
-	private static long         mainTimeOut         = 3000;
-	private static long         startTime           = System.currentTimeMillis();
-	private        int          length;
+	private static boolean          tryToInterruptSound = false;
+	private static long             mainTimeOut         = 3000;
+	private static long             startTime           = System.currentTimeMillis();
+	private        int              length;
 	@Setter(AccessLevel.PACKAGE)
 	@Getter(AccessLevel.PACKAGE)
-	private        float        volume;
-	private        Clip         clip;
-	private        AudioFormat  format;
-	private FloatControl control;
-	private AudioInputStream stream;
+	private        float            volume;
+	private        Clip             clip;
+	private        AudioFormat      format;
+	private        FloatControl     control;
+	private        AudioInputStream stream;
 
 
 	AudioResource(String path, String fileName) {
@@ -76,10 +76,18 @@ class AudioResource extends Resource {
 		play(-10f);
 	}
 
+	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS
+	synchronized void play(float db) {
+
+		Thread snd = new Thread(new SoundThread(this, db));
+		snd.setDaemon(true);
+		snd.start();
+	}
+
 	private static class SoundThread implements Runnable {
 
 		private final AudioResource res;
-		private final float db;
+		private final float         db;
 
 		SoundThread(final AudioResource res, final float db) {
 			this.res = res;
@@ -90,10 +98,9 @@ class AudioResource extends Resource {
 		public void run() {
 			int frameSize = res.format.getFrameSize();
 			float frameRate = res.format.getFrameRate();
-			res.control = (FloatControl)  res.clip.getControl(FloatControl.Type.MASTER_GAIN);
+			res.control = (FloatControl) res.clip.getControl(FloatControl.Type.MASTER_GAIN);
 			long durationInMilliSeconds =
 					(long) (((float) res.length / (frameSize * frameRate)) * 1000);
-
 
 
 			//float range = gainControl.getMaximum() - gainControl.getMinimum();
@@ -122,14 +129,6 @@ class AudioResource extends Resource {
 			res.clip.stop();
 			Common.printf(Debug.SOUND, "%d: sound stopped", System.currentTimeMillis() - startTime);
 		}
-	}
-
-	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS
-	synchronized void play(float db) {
-
-		Thread snd = new Thread(new SoundThread(this, db));
-		snd.setDaemon(true);
-		snd.start();
 	}
 
 

@@ -24,10 +24,11 @@ class Hypervisor {
 		Common.printf(Debug.HYPERVISOR, "Hypervisor closed");
 	}
 
-	private static class InternalHypervisor implements Runnable {
+	private static final class InternalHypervisor implements Runnable {
 
 		@Override
 		public void run() {
+
 			while (true) {
 				Common.sleep(pollingMs);
 				//Common.printf(Debug.HYPERVISOR, "Performing sweep");

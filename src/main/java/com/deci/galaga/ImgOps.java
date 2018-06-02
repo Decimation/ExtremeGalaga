@@ -6,7 +6,8 @@ import java.awt.image.BufferedImage;
 
 class ImgOps {
 
-	private ImgOps() {}
+	private ImgOps() {
+	}
 
 
 	static Image rotateBy(BufferedImage source, double degrees) {

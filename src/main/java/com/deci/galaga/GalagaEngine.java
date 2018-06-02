@@ -16,15 +16,17 @@ public class GalagaEngine extends PApplet {
 	private static final String        GAME_TITLE = "Extreme Galaga";
 	private static final int           FPS        = 60;
 	static               PApplet       instance;
-
-	static GObject ship;
-
 	static boolean canShoot;
 	static int     canShootCounter;
 	static int     shootingFrequency = 5;
+	private static GObject ship;
 
 	static {
 
+	}
+
+	static Ship getShip() {
+		return (Ship) ship;
 	}
 
 	@Override
@@ -59,11 +61,6 @@ public class GalagaEngine extends PApplet {
 
 		Hypervisor.init();
 	}
-
-	static Ship getShip() {
-		return (Ship) ship;
-	}
-
 
 	@Override
 	public void draw() {

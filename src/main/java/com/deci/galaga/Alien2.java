@@ -4,7 +4,7 @@ import java.util.Random;
 
 class Alien2 extends GObject implements IEnemy {
 	private final SequentialImage si;
-	private final Random rand;
+	private final Random          rand;
 
 
 	Alien2() {
