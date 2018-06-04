@@ -1,7 +1,6 @@
 package com.deci.galaga;
 
-import java.util.Random;
-class Alien2 extends GObject {
+class Alien2 extends GObject implements IEnemy {
 	private final SequentialImage si;
 
 
@@ -18,13 +17,14 @@ class Alien2 extends GObject {
 
 
 	@Override
-	void update () {
+	void update() {
 		int count = 5;
 		boolean turn = false;
-		setX(getX() +1);
+		setX(getX() + 1);
 
 
 	}
+
 	@Override
 	void manifest() {
 		if (isAlive())
@@ -36,7 +36,8 @@ class Alien2 extends GObject {
 
 	}
 
-	void explode() {
+	@Override
+	public void explode() {
 		si.advanceEvery(this.getPoint(), 5);
 	}
 
