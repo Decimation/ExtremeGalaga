@@ -21,15 +21,8 @@ class Alien2 extends GObject implements IEnemy {
 
 	@Override
 	void update() {
-		int z = rand.nextInt(2);
-		if (z == 1) {
-			setX(getX() + 1);
-			setY(getY() + 1);
-		}
-		if (z == 2) {
-			setX(getX() - 1);
-			setY(getY() + 1);
-		}
+		if(isAlive())
+			setX(getX()+1);
 	}
 
 
