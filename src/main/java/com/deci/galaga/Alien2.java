@@ -1,35 +1,35 @@
 package com.deci.galaga;
 
 import java.util.Random;
-
-class Alien2 extends GObject implements IEnemy {
+class Alien2 extends GObject {
 	private final SequentialImage si;
-	private final Random          rand;
 
 
 	Alien2() {
-
 		super(Assets.getImage("enemy1.png"));
 		super.setY(200);
 		super.setX(10);
+		//super.setSound(Assets.getSound("enemy1death.wav"));
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
 		super.setHealth(10f);
 		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
-		rand = new Random();
+
 	}
 
 
 	@Override
-	void update() {
-		int z = rand.nextInt(2);
-		if (z == 1) {
-			setX(getX() + 1);
-			setY(getY() + 1);
+	void update ()  {
+		int count =0;
+		while(count > getX() -5 || count==0){
+		count --;
+		setX(getX() -1);
+		Common.sleep(5000);}
+		while(count <getX() +5 || count==0){
+			count++;
+			setX(getX() +1);
+			Common.sleep(5000);
 		}
-		if (z == 2) {
-			setX(getX() - 1);
-			setY(getY() + 1);
-		}
+
 	}
 
 
@@ -44,8 +44,7 @@ class Alien2 extends GObject implements IEnemy {
 
 	}
 
-	@Override
-	public void explode() {
+	void explode() {
 		si.advanceEvery(this.getPoint(), 5);
 	}
 
@@ -60,4 +59,4 @@ class Alien2 extends GObject implements IEnemy {
 		}
 	}
 }
-
+//test

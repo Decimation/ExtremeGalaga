@@ -93,7 +93,7 @@ abstract class GObject {
 	/**
 	 * Implementation should update the object's state when it is called.
 	 */
-	abstract void update();
+	abstract void update() throws InterruptedException;
 
 	/**
 	 * Implementation should draw the object.
