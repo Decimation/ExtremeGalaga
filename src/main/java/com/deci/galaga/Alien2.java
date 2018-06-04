@@ -18,21 +18,13 @@ class Alien2 extends GObject {
 
 
 	@Override
-	void update ()  {
-		int count =0;
-		while(count > getX() -5 || count==0){
-		count --;
-		setX(getX() -1);
-		Common.sleep(5000);}
-		while(count <getX() +5 || count==0){
-			count++;
-			setX(getX() +1);
-			Common.sleep(5000);
-		}
+	void update () {
+		int count = 5;
+		boolean turn = false;
+		setX(getX() +1);
+
 
 	}
-
-
 	@Override
 	void manifest() {
 		if (isAlive())
