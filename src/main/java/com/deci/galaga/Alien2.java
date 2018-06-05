@@ -9,20 +9,16 @@ class Alien2 extends GObject implements IEnemy {
 	Alien2() {
 		super(Assets.getImage("enemy1.png"));
 		super.setY(200);
-		super.setX(10);
-		//super.setSound(Assets.getSound("enemy1death.wav"));
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
 		super.setHealth(10f);
 		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
 		do {
 			super.setX(new Random().nextInt(GalagaEngine.HEIGHT - 25));
 		} while (Hitbox.collidesWithAliens(this));
-
 	}
 
 
 	private boolean invert;
-	private float xDelta = 3f;
 
 	@Override
 	void update() {
