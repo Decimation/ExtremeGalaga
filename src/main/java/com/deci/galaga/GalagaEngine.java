@@ -10,16 +10,16 @@ public class GalagaEngine extends PApplet {
 	/**
 	 * A CopyOnWriteArrayList is required for concurrent modification
 	 */
-	static final         List<GObject> aliens     = new CopyOnWriteArrayList<>();
-	static final         int           WIDTH      = 800;
-	static final         int           HEIGHT     = 800;
-	private static final String        GAME_TITLE = "Extreme Galaga";
-	private static final int           FPS        = 60;
+	static final         List<GObject> aliens            = new CopyOnWriteArrayList<>();
+	static final         int           WIDTH             = 800;
+	static final         int           HEIGHT            = 800;
+	private static final String        GAME_TITLE        = "Extreme Galaga";
+	private static final int           FPS               = 60;
 	static               PApplet       instance;
-	static boolean canShoot;
-	static int     canShootCounter;
-	static int     shootingFrequency = 5;
-	private static GObject ship;
+	static               boolean       canShoot;
+	static               int           canShootCounter;
+	static               int           shootingFrequency = 5;
+	private static       GObject       ship;
 
 	static {
 
