@@ -4,6 +4,8 @@ import java.util.Random;
 
 class Alien2 extends GObject implements IEnemy {
 	private final SequentialImage si;
+	private boolean invert;
+	private float delta;
 
 
 	Alien2() {
@@ -15,14 +17,12 @@ class Alien2 extends GObject implements IEnemy {
 		do {
 			super.setX(new Random().nextInt(GalagaEngine.HEIGHT - 25));
 		} while (Hitbox.collidesWithAliens(this));
+		delta = 3f;
 	}
-
-
-	private boolean invert;
 
 	@Override
 	void update() {
-		float delta = 3f;
+		delta = Math.abs(delta);
 		if (getX() >= 750) {
 			invert = true;
 		}
@@ -37,8 +37,6 @@ class Alien2 extends GObject implements IEnemy {
 		if (!invert) {
 			delta = Math.abs(delta);
 		}
-
-
 
 
 		setX(getX() + delta);
@@ -71,4 +69,3 @@ class Alien2 extends GObject implements IEnemy {
 		}
 	}
 }
-//test
