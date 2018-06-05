@@ -54,10 +54,11 @@ public class GalagaEngine extends PApplet {
 		smooth();
 		frameRate(FPS);
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10; i++) {
 			aliens.add(new Alien()); //tmp
+			aliens.add(new Alien2());
+		}
 
-		aliens.add(new Alien2());
 
 		Hypervisor.init();
 	}

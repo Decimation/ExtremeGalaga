@@ -1,5 +1,7 @@
 package com.deci.galaga;
 
+import java.util.Random;
+
 class Alien2 extends GObject implements IEnemy {
 	private final SequentialImage si;
 
@@ -12,6 +14,9 @@ class Alien2 extends GObject implements IEnemy {
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
 		super.setHealth(10f);
 		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
+		do {
+			super.setX(new Random().nextInt(GalagaEngine.HEIGHT - 25));
+		} while (Hitbox.collidesWithAliens(this));
 
 	}
 
