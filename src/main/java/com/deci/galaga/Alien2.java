@@ -16,13 +16,31 @@ class Alien2 extends GObject implements IEnemy {
 	}
 
 
+	private boolean invert;
+	private float xDelta = 3f;
+
 	@Override
 	void update() {
-		int count = 5;
-		boolean turn = false;
-		setX(getX() + 1);
+		float delta = 3f;
+		if (getX() >= 750) {
+			invert = true;
+		}
+
+		if (getX() <= 0) {
+			invert = false;
+		}
+		if (invert) {
+			delta *= -1;
+
+		}
+		if (!invert) {
+			delta = Math.abs(delta);
+		}
 
 
+
+
+		setX(getX() + delta);
 	}
 
 	@Override
