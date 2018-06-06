@@ -2,23 +2,36 @@ package com.deci.galaga;
 
 import java.util.Random;
 
-class Alien2 extends GObject implements IEnemy {
-	private final SequentialImage si;
-	private boolean invert;
-	private float delta;
+class DynamicAlien extends GAlien {
 
+	private final Switch  attackSwitch;
+	private       boolean invert;
+	private       float   delta;
 
-	Alien2() {
+	DynamicAlien() {
 		super(Assets.getImage("enemy1.png"));
 		super.setY(200);
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
 		super.setHealth(10f);
-		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
 		do {
 			super.setX(new Random().nextInt(GalagaEngine.HEIGHT - 25));
 		} while (Hitbox.collidesWithAliens(this));
 		delta = 3f;
+		attackSwitch = new Switch(10);
 	}
+
+	@Override
+	void attack() {
+
+		for (int i = getBulletCache().size() - 1; i >= 0; i--) {
+			GBullet bullet = getBulletCache().get(i);
+			bullet.update();
+
+		}
+
+
+	}
+
 
 	@Override
 	void update() {
@@ -30,16 +43,16 @@ class Alien2 extends GObject implements IEnemy {
 		if (getX() <= 0) {
 			invert = false;
 		}
+
 		if (invert) {
 			delta *= -1;
-
 		}
 		if (!invert) {
 			delta = Math.abs(delta);
 		}
-
-
 		setX(getX() + delta);
+
+
 	}
 
 	@Override
@@ -54,18 +67,7 @@ class Alien2 extends GObject implements IEnemy {
 	}
 
 	@Override
-	public void explode() {
-		si.advanceEvery(this.getPoint(), 5);
-	}
-
-	@Override
-	void destroy() {
-		if (isAlive()) {
-			getSound().play();
-
-			//explode();
-
-			super.destroy();
-		}
+	public String toString() {
+		return String.format("DynamicAlien %s", super.toString());
 	}
 }

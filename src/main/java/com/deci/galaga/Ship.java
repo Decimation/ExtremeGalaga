@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 final class Ship extends GObject implements IMoveable {
 
 	private static final float LERP_DELTA = 0.1f;
-	List<GBullet> bulletCache;
+	List<ShipBullet> bulletCache;
 
 	/**
 	 * How many x pixels to move by when changing coordinates
@@ -19,15 +19,16 @@ final class Ship extends GObject implements IMoveable {
 		setX(0f);
 		setY(500f);
 		setHealth(100f);
-		xDelta = 25f;
+		xDelta = 40f;
 		bulletCache = new CopyOnWriteArrayList<>();
+		super.setSound(Assets.getSound("explosion.wav"));
 	}
 
 
 	@Override
 	void update() {
 		if (GalagaEngine.instance.mousePressed && GalagaEngine.canShoot) {
-			bulletCache.add(new GBullet(getPoint()));
+			bulletCache.add(new ShipBullet());
 			GalagaEngine.canShoot = false;
 			GalagaEngine.canShootCounter = 0;
 		} else {
@@ -72,6 +73,18 @@ final class Ship extends GObject implements IMoveable {
 		switch (c) {
 			default:
 				move(c);
+		}
+	}
+
+	@Override
+	void damage(float dmg) {
+		super.damageInternal(dmg);
+		if (getHealth() <= 0) {
+			this.getSound().play();
+			this.destroy();
+
+			Common.sleep(1000 * 5);
+			GalagaEngine.instance.exit();
 		}
 	}
 }

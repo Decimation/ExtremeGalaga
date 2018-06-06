@@ -23,7 +23,7 @@ abstract class GObject {
 	private float health;
 
 	@Getter(AccessLevel.PACKAGE)
-	private boolean isAlive;
+	private volatile boolean isAlive;
 
 	private Resource image;
 	private Resource sound;
@@ -46,13 +46,13 @@ abstract class GObject {
 		ID = ShortUUID.next();
 	}
 
-	final void damage(float dmg) {
-		float before = getHealth();
-		setHealth(getHealth() - dmg);
+	abstract void damage(float dmg);
+
+	final void damageInternal(float dmg) {
+		float before = health;
+		setHealth(health - dmg);
 		final float delta = before - getHealth();
-		if (health <= 0) {
-			this.destroy();
-		}
+
 		//Common.printf("%f -> %f (-%f)", before, getHealth(), delta);
 		hitsound.play();
 	}
@@ -67,7 +67,7 @@ abstract class GObject {
 			return;
 		}
 		eligibleForDeletion = true;
-		Common.printf(Debug.HYPERVISOR, "Flagged object %s for deletion", this.toString());
+		//Common.printf(Debug.HYPERVISOR, "Flagged object %s for deletion", this.toString());
 	}
 
 	final void rotate(double degrees) {

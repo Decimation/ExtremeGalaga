@@ -3,6 +3,8 @@ package com.deci.galaga;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Random;
+
 final class Point {
 
 	@Getter
@@ -18,23 +20,27 @@ final class Point {
 		this.y = y;
 	}
 
+	private Point() {
+		this.x = 0;
+		this.y = 0;
+	}
+
+	static Point random(Point p) {
+		Random r = new Random();
+		Point np = new Point();
+		if (p.x > 0)
+			np.setX(r.nextInt((int) p.x));
+		if (p.y > 0)
+			np.setY(r.nextInt((int) p.y));
+		return np;
+	}
+
 	void incrementX(float delta) {
 		x += delta;
 	}
 
 	void incrementY(float delta) {
 		y += delta;
-	}
-
-	boolean equalsInt(final Point p) {
-		int i_pX = (int) p.getX();
-		int i_pY = (int) p.getY();
-		int i_X = (int) x;
-		int i_Y = (int) y;
-
-		System.out.printf("Comparing (%d, %d) to (%d, %d)\n", i_X, i_Y, i_pX, i_pY);
-
-		return i_X == i_pX && i_Y == i_pY;
 	}
 
 	@Override

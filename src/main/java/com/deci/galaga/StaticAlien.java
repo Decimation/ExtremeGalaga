@@ -2,12 +2,10 @@ package com.deci.galaga;
 
 import java.util.Random;
 
-class Alien extends GObject implements IEnemy {
+class StaticAlien extends GAlien {
 
-	private SequentialImage si;
-
-	Alien() {
-		super(Assets.getImage("enemy1.png"));
+	StaticAlien() {
+		super(Assets.getImage("enemy2.png"));
 		super.setY(100);
 
 		do {
@@ -17,14 +15,17 @@ class Alien extends GObject implements IEnemy {
 		//super.setSound(Assets.getSound("enemy1death.wav"));
 		super.setSound(Assets.getSound("energy_disintegrate4.wav"));
 		super.setHealth(10f);
-		si = SequentialImage.create(Assets.EG_GITHUB_ASSETS_ROOT, "explosion_f2.png", "explosion_f3.png", "explosion_f4.png");
+
 		//Common.printf(toString());
 	}
-
 
 	@Override
 	void update() {
 
+	}
+
+	@Override
+	void attack() {
 	}
 
 	@Override
@@ -39,18 +40,7 @@ class Alien extends GObject implements IEnemy {
 	}
 
 	@Override
-	public void explode() {
-		si.advanceEvery(this.getPoint(), 5);
-	}
-
-	@Override
-	void destroy() {
-		if (isAlive()) {
-			getSound().play();
-
-			//explode();
-
-			super.destroy();
-		}
+	public String toString() {
+		return String.format("StaticAlien %s", super.toString());
 	}
 }

@@ -28,6 +28,10 @@ class SequentialImage {
 		}
 	}
 
+	boolean isComplete() {
+		return currentIndex >= frames.length;
+	}
+
 	/**
 	 * @param p            Where to draw the animation
 	 * @param advanceEvery How many calls to wait until moving the frame index

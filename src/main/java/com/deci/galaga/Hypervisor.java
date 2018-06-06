@@ -33,44 +33,60 @@ class Hypervisor {
 				Common.sleep(pollingMs);
 				//Common.printf(Debug.HYPERVISOR, "Performing sweep");
 
+				IntTuple localAliens = new IntTuple();
+				IntTuple localBullets = new IntTuple();
 
-				int flagged = 0;
-				int nonFlagged = 0;
 
 				// Sweep aliens
 				if (!GalagaEngine.aliens.isEmpty()) {
-					for (GObject obj : GalagaEngine.aliens) {
+					for (GAlien obj : GalagaEngine.aliens) {
+
+						// Recursively search the bullet cache in the aliens
+						/*for (GBullet bullet : obj.getBulletCache()) {
+							if (bullet.flaggedForDeletion()) {
+								localBullets.incrementKey();
+								bullet.destroy();
+								obj.getBulletCache().remove(bullet);
+							}
+							if (!bullet.flaggedForDeletion()) {
+								localBullets.incrementKey();
+							}
+							//Common.printf(Debug.HYPERVISOR, "[%s, %s]", obj, bullet);
+						}*/
+
 						if (obj.flaggedForDeletion()) {
-							flagged++;
+							localAliens.incrementKey();
 							obj.destroy();
+							localBullets.incrementKey(obj.getBulletCache().size());
+							obj.getBulletCache().clear();
+
+							assert GalagaEngine.aliens.indexOf(obj) != -1;
 							GalagaEngine.aliens.remove(obj);
 						}
 						if (!obj.flaggedForDeletion()) {
-							nonFlagged++;
+							localAliens.incrementValue();
 						}
+
+
 					}
+					//Common.printf(Debug.HYPERVISOR, "Deleted %d aliens, %d ignored", flagged, nonFlagged);
 				}
 
-				flagged = 0;
-				nonFlagged = 0;
 
 				// Sweep bullets
 				if (!GalagaEngine.getShip().bulletCache.isEmpty()) {
-					for (GBullet bullet : GalagaEngine.getShip().bulletCache) {
+					for (ShipBullet bullet : GalagaEngine.getShip().bulletCache) {
 						if (bullet.flaggedForDeletion()) {
-							flagged++;
+							localBullets.incrementKey();
 							bullet.destroy();
 							GalagaEngine.getShip().bulletCache.remove(bullet);
 						}
 						if (!bullet.flaggedForDeletion()) {
-							nonFlagged++;
+							localBullets.incrementValue();
 						}
 					}
 				}
-				if (flagged > 0) {
-					//Common.printf(Debug.HYPERVISOR, "Indexed %d flagged objects and %d non-flagged objects", flagged, nonflagged);
-					Common.printf(Debug.HYPERVISOR, "Unloaded %d GObjects", flagged);
-				}
+				System.out.printf("[D/A] Aliens: %s | Bullets: %s\n[Size] Aliens: %d | Bullets: %d\n\n", localAliens, localBullets, GalagaEngine.aliens.size(), GalagaEngine.getShip().bulletCache.size());
 
 			}
 		}

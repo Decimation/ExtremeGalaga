@@ -33,11 +33,6 @@ class Common {
 			System.out.printf("[%s] %s\n", dbg.toString().toUpperCase(), String.format(s, fmt));
 	}
 
-	@SuppressWarnings("unchecked")
-	static <T> T cast(final Object o, Class<T> c) {
-		return (T) o;
-	}
-
 	static void autoThread(final Runnable target) {
 		final Thread t = new Thread(target);
 		//System.out.printf("Starting autoThread %s\n", t.getName());

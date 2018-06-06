@@ -1,56 +1,63 @@
 package com.deci.galaga;
 
-/**
- * Bullet entity for Galaga ship
- *
- * @author 795835
- */
-class GBullet extends GObject {
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
-	private static final int     X_ORIGIN_OFFSET = 14;
-	private final        float   speed;
-	private final        float   rotation;
-	private              float   damage;
-	private              boolean hasFired;
+abstract class GBullet extends GObject {
+
+	@Setter(AccessLevel.PACKAGE)
+	@Getter(AccessLevel.PACKAGE)
+	private float speed;
+
+	@Setter(AccessLevel.PACKAGE)
+	@Getter(AccessLevel.PACKAGE)
+	private int   xOriginOffset;
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private float rotation;
+
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private float   damage;
+	private boolean hasFired;
 
 	GBullet(final Point origin) {
-		super(Assets.getImage("galaga_bullet.png"));
+		this();
 		setX(origin.getX());
 		setY(origin.getY());
-		final Point oldPoint = new Point(GalagaEngine.instance.mouseX, GalagaEngine.instance.mouseY);
-		rotation = GalagaEngine.atan2(oldPoint.getY() - getY(), oldPoint.getX() - getX()) / GalagaEngine.PI * 180;
-		super.rotate(rotation - 90);
+	}
+
+	GBullet(final ImageResource img) {
+		super(img);
 		speed = 10f;
 		damage = 5f;
 		hasFired = false;
 		super.setSound(Assets.getSound("smg1_fire1.wav"));
-		//Common.printf(toString());
+		super.getSound().setVolume(-30f);
 	}
 
-	private void hitScan() {
-		for (GObject alien : GalagaEngine.aliens) {
-			if (alien.isAlive() && Hitbox.collision(alien, this)) {
-				alien.damage(damage);
-				Hitbox.drawIntersection(alien, this);
-				this.flagForDeletion();
-			}
-		}
+	GBullet() {
+		this(Assets.getImage("galaga_bullet.png"));
+
 	}
+
+	abstract void hitScan();
 
 	@Override
-	void manifest() {
+	final void manifest() {
 		if (isAlive()) {
-			this.setX(this.getX() + X_ORIGIN_OFFSET);
+			this.setX(this.getX() + xOriginOffset);
 			GalagaEngine.instance.image(this.getGameImage(), this.getX(), this.getY());
 			hitScan();
 			Hitbox.apply(this);
-			this.setX(this.getX() - X_ORIGIN_OFFSET);
+			this.setX(this.getX() - xOriginOffset);
 		}
 
 	}
 
 	@Override
-	void update() {
+	final void update() {
 		if (!hasFired) {
 			getSound().play();
 			hasFired = true;
@@ -60,22 +67,22 @@ class GBullet extends GObject {
 		this.manifest();
 
 		if (getX() <= 0f || getY() <= 0f || getY() >= GalagaEngine.WIDTH || getX() >= GalagaEngine.WIDTH) {
-			this.flagForDeletion();
+			flagForDeletion();
 		}
 	}
 
 	@Override
-	void handleKey(final char c) {
+	final void handleKey(final char c) {
 
 	}
 
 	@Override
-	public String toString() {
-		return super.toString();
-	}
-
-	@Override
-	void destroy() {
+	final void destroy() {
 		super.destroy();
+	}
+
+	@Override
+	final void damage(float dmg) {
+		super.damageInternal(dmg);
 	}
 }

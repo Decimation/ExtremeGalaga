@@ -1,7 +1,5 @@
 package com.deci.galaga;
 
-import lombok.SneakyThrows;
-
 import java.awt.*;
 
 class Hitbox {
@@ -26,7 +24,7 @@ class Hitbox {
 	 * @param obj GObject's hitbox to draw.
 	 */
 	static void apply(final GObject obj) {
-		if (!enabled) {
+		if (!enabled || !obj.isAlive()) {
 			return;
 		}
 		GalagaEngine.instance.noFill();
@@ -38,21 +36,21 @@ class Hitbox {
 	/**
 	 * Draws the intersection between two GObjects' hitboxes.
 	 */
-	@SneakyThrows
 	static void drawIntersection(final GObject a, final GObject b) {
 		if (!enabled) {
 			return;
 		}
-		if (!collision(a, b)) {
+		if (!intersection(a, b)) {
 			// todo: make GalagaException class
-			throw new Exception("No intersection detected");
+			//throw new Exception("No intersection detected");
+			return;
 		}
 		Rectangle intersection = new Rectangle((int) a.getX(), (int) a.getY(), a.getGameImage().width, a.getGameImage().height);
 		intersection = intersection.intersection(new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height));
 
 		GalagaEngine.instance.stroke(0, 255, 0);
-		GalagaEngine.instance.line(intersection.x, intersection.y, 800, 800);
-		GalagaEngine.instance.line(intersection.x, intersection.y, 800, intersection.y);
+		GalagaEngine.instance.line(intersection.x, 0, intersection.x, 800);
+		GalagaEngine.instance.line(0, intersection.y, 800, intersection.y);
 	}
 
 	/**
@@ -62,7 +60,7 @@ class Hitbox {
 	 * @param b Second GObject
 	 * @return Whether there is an intersection between the two hitboxes.
 	 */
-	static boolean collision(final GObject a, final GObject b) {
+	static boolean intersection(final GObject a, final GObject b) {
 		Rectangle ar = new Rectangle((int) a.getX(), (int) a.getY(), a.getGameImage().width, a.getGameImage().height);
 		Rectangle br = new Rectangle((int) b.getX(), (int) b.getY(), b.getGameImage().width, b.getGameImage().height);
 		if (a.isAlive() && b.isAlive() && ar.intersects(br)) {
@@ -74,7 +72,7 @@ class Hitbox {
 
 	static boolean collidesWithAliens(final GObject a) {
 		for (GObject b : GalagaEngine.aliens) {
-			if (collision(a, b)) return true;
+			if (intersection(a, b)) return true;
 		}
 		return false;
 	}

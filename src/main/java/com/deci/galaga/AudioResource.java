@@ -73,7 +73,7 @@ class AudioResource extends Resource {
 	}
 
 	synchronized void play() {
-		play(-10f);
+		play(volume);
 	}
 
 	//todo: fix choppy sounds and FIGURE OUT A MORE EFFICIENT WAY TO PLAY SOUNDS
